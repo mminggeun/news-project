@@ -1,0 +1,83 @@
+body {
+  overflow-x: hidden;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: -20px; /* 기존 margin 값 유지 */
+  margin-left: 65px; /* 기존 margin 값 유지 */
+  position: sticky; /* sticky로 변경 */
+  top: -150px; /* 스크롤 시 고정될 위치 설정 (margin-top과 일치) */
+  z-index: 10; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+}
+
+.header1 {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  margin-top: 152px; 
+  position: relative; 
+  z-index: 2; 
+}
+
+.leftSide {
+  display: flex;
+  align-items: center; 
+  margin-bottom: 59px;
+  margin-right: -480px;
+}
+
+.logo2 {
+  height: 50px;
+  margin-top: -17px;
+  position: relative; 
+  z-index: 3;
+  margin-right: 290px; 
+}
+
+.blackScreen {
+  background-color: rgb(0, 0, 0);
+  height: 140px; 
+  width: 240%; 
+  position: absolute; 
+  z-index: 1; 
+}
+
+.leftBlackScreen {
+  left: 0; 
+}
+
+.rightBlackScreen {
+  right: 0; 
+}
+
+.username {
+  margin: 0 10px; 
+  font-size: 15px; 
+  color: #eee8e8; 
+  display: flex;
+  align-items: center; 
+  height: 50px; 
+  margin-left: 130px; 
+}
+
+.logoutbutton {
+  padding: 1px 3px; 
+  font-size: 13px; 
+  background-color: #211e1e; 
+  color: white; 
+  border: none; 
+  border-radius: 1px; 
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  height: 25px; 
+  margin-left: 3px; 
+}
+
+.logoutbutton:hover {
+  background-color: #ded2d1; 
+}

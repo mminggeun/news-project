@@ -1,0 +1,133 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  margin-top: 1rem;
+}
+
+.logo1-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.logo1 {
+  width: 500px;
+  height: auto;
+  cursor: pointer;
+}
+
+.register h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #000000;
+}
+
+.register p {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: #000000;
+}
+
+.register form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+.register input {
+  padding: 0.7rem 0; /* 위아래 패딩만 남기고 좌우 패딩 제거 */
+  font-size: 1rem;
+  border: none; /* 테두리 제거 */
+  border-bottom: 1px solid #ccc; /* 아래쪽에만 테두리 추가 */
+  border-radius: 0; /* 모서리 둥글기 제거 */
+  width: 300px;
+  margin-top: 1rem;
+  background: transparent; /* 배경 투명하게 설정 */
+  outline: none; /* 포커스 시 기본 아웃라인 제거 */
+}
+
+.register input:focus {
+  border-bottom: 1px solid #000; /* 포커스 시 아래쪽 테두리 색상 변경 */
+}
+
+.remember-username {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2rem;
+  margin-right: -10px;
+  font-size:14px;
+  color: black;
+}
+
+.remember-username label {
+  display: flex;
+  align-items: center;
+  margin-right: 220px;
+  margin-bottom: -1rem;
+}
+
+.remember-username input[type="checkbox"] {
+  margin-right: 0px;
+  margin-bottom: -0.2rem;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.register button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #0a0b0b;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 320px;
+  color: white;
+}
+
+.not-member {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.not-member-border {
+  border: 1px solid #f9f9f9;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 17px 17px;
+  display: flex;
+  align-items: center;
+}
+
+.not-member-border p {
+  margin-right: 20px;
+  color: #666;
+  font-size: 15px;
+}
+
+.register-btn {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #666;
+  padding: 8px 18px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}

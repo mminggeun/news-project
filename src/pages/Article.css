@@ -1,0 +1,100 @@
+.article {
+  background-color: #f2f4f7; /* 전체 배경색을 부드러운 회색으로 설정 */
+  min-height: 100vh; /* 전체 높이를 100%로 설정 */
+  width: 750px;
+  display: flex; /* flexbox 사용 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: flex-start; /* 상단 정렬 */
+  margin-left: 33px;
+  margin-top:450px;
+}
+
+.article-container {
+  min-height: 480px;
+  font-family: '맑은 고딕', serif;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 1600px;
+  background-color: white;
+  margin: 0 auto;
+  margin-top: 340px;
+  width: 110%;
+  position: relative;
+  padding-bottom:200px;
+}
+  
+.article-header {
+  margin-top: 30px;
+}
+  
+.article-title {
+  font-size: 25px;
+  font-weight: 900;
+  margin-top: -160px; 
+  color:black;
+  width: 600px;
+}
+  
+.article-content {
+  font-size: 18px;
+  margin-top: 50px;
+  max-height: 70vh;
+  overflow-y: auto;
+  font-weight: lighter;
+  max-height: 70vh; /* 최대 높이를 설정하여 화면을 넘어가지 않도록 함 */
+  width: 600px;
+  color:black;
+}
+
+/* 스크롤바 스타일 */
+.article-content::-webkit-scrollbar {
+  width: 8px; /* 스크롤바의 너비 */
+}
+
+.article-content::-webkit-scrollbar-thumb {
+  background-color: #0d0d0d; /* 스크롤바의 색상 */
+  border-radius: 10px; /* 스크롤바의 모서리 둥글게 */
+}
+
+.article-content::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background-color: #161414; /* 스크롤바에 마우스를 올렸을 때 색상 */
+}
+
+.article-content::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
+  border-radius: 10px; /* 트랙의 모서리 둥글게 */
+}
+
+  
+.back {
+  margin-bottom: -10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: black;
+  text-decoration: underline;
+}
+  
+.article-image {
+  height: auto;
+  width: 600px;
+  margin-top:20px;
+}
+
+.scrap-button {
+  margin-top: 20px;
+  margin-left: 510px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #161b1c;
+  color: white;
+  border-radius: 1px;
+}
+
+.scrap-button:hover {
+  background-color: #0056b3;
+}
