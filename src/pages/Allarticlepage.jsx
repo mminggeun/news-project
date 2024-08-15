@@ -41,14 +41,14 @@ function Allarticlepage() {
     };
 
     return (
-        <div className="content-wrapper-1">
-            <div className="date-container-1">
+        <div className="all-artilclepage">
+            <div className="artilclepage-date">
                 <p className="date-text-1">{finalFormattedDate}</p>
             </div>
-            <div className="date-container-2">
+            <div className="artilclepage-title">
                 <h2 className="page-title">오늘자 전체 기사</h2> 
             </div>
-            <div className="articles-container-1">
+            <div className="articlepage-container">
                 {currentArticles.length > 0 && (
                     <div className="all-articles-1">
                         {currentArticles.map((article, index) => {
@@ -97,7 +97,7 @@ function Allarticlepage() {
                         </button>
                     ))}
                 </div>
-        </div>
+            </div>
     );
 }
 

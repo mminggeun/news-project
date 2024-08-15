@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import articlelist from './articlelist';
-import BottomImage1 from '../assets/homebottom1.png';
-import BottomImage2 from '../assets/homebottom2.png';
+import articlelist from '../pages/articlelist';
 import footerimage from '../assets/footerimage.png';
-import './Home.css';
+import '../styles/Home.css';
 
 function Home() {
     const [currentDate] = useState(new Date());
@@ -132,16 +130,18 @@ function Home() {
                 </div>
             </div>
             <div className="sidebar1">  
-                <Link to="/mypage">
-                    <img src={BottomImage1} className="BottomImage1" />
-                </Link>
-                <Link to="/Allarticlepage">
-                    <img src={BottomImage2} className="BottomImage2" />
-                </Link>
+                <div className="sidebar-box">
+                    <div className="sidebar-top"></div>
+                        <div className="sidebar-content">
+                            <Link to="/mypage" className="sidebar-link">스크랩한 <br/>기사 <br/> 보러가기</Link>
+                            <Link to="/Allarticlepage" className="sidebar-link">전체기사 <br/>보러가기</Link>
+                        </div>
+                    <div className="sidebar-bottom"></div>
+                </div>
             </div>
             <div className="footer">
                 <img src={footerimage} className="footerimage" />
-                <p>SWENNEWS 신문 등록·발행일자:2011년 7월 19일  <span className="publisher">  발행인:전재환, 장민근 </span>   
+                <p>SWENNEWS 신문 등록·발행일자:2024년 8월 19일  
                 주소:경남 창원시 의창구 창원대학로 20 (퇴촌동)
                 © SWENNEWS신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지</p>
             </div>

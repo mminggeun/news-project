@@ -1,8 +1,7 @@
 import './App.css';
 import Header from './components/Header';
-import First from './pages/First';
-import Home from './pages/Home';
-import Register from './pages/Register';
+import Home from './components/Home';
+import Login from './pages/Login';
 import MakeId from './pages/MakeId';
 import Article from './pages/Article'; 
 import Allarticlepage from './pages/Allarticlepage';
@@ -14,14 +13,13 @@ function App() {
     <div className='App'>
       <Router>
         <Routes>
-          <Route path="/" element={<First />} />
-          <Route path="/home" element={
+          <Route path="/" element={
             <>
               <Header />
               <Home />
             </>
           } />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/makeId" element={<MakeId />} />
           <Route path="/allarticlepage" element={
             <>

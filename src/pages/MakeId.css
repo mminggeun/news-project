@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 800px; 
-    margin-top: 28rem; 
+    margin-top: 10rem; 
 }
 
 .make-id h1 {
@@ -92,4 +92,10 @@
   
   .email-mismatch {
     border: 1px solid #ff6b6b;
+  }
+
+  .phone-error {
+    color: #ff6b6b;
+    font-size: 14px;
+    margin-top: 5px;
   }

@@ -6,15 +6,16 @@ import Logo1 from '../assets/newslogo-1.png';
 
 function MakeId() {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
-  const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneNumber, setphoneNumber] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [passwordValidationError, setPasswordValidationError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
 
   const handleLogoClick = () => {
     navigate('/');
@@ -23,8 +24,15 @@ function MakeId() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 아이디 유효성 검사
+    const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+    if (!usernameRegex.test(username)) {
+      alert("아이디는 알파벳 대소문자와 숫자로만 구성되며 4~20자이어야 합니다.");
+      return;
+    }
+
     // 비밀번호 유효성 검사
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!])(?!.*\s).{8,16}$/;
     if (!passwordRegex.test(password)) {
       setPasswordValidationError(true);
       return;
@@ -49,31 +57,37 @@ function MakeId() {
       setEmailError(false);
     }
 
+    // 휴대폰 번호 형식 검사
+    const phoneRegex = /^01(?:0|1|[6-9])[0-9]{7,8}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError(true);
+      return;
+    } else {
+      setPhoneError(false);
+    }
+
     try {
-      // 회원가입 정보를 LoginUserRequest DTO에 맞게 구성
-      const LoginUserRequest = {
-        username,
-        userid,
+      // 회원가입 정보를 백엔드의 UserRequest DTO에 맞게 구성
+      const UserRequest = {
+        name,       // 서버의 'name' 필드에 해당
+        username,     // 서버의 'username' 필드에 해당
         password,
         email,
-        phone,
+        phoneNumber    // 서버의 'phoneNumber' 필드에 해당
       };
 
       // 회원가입 정보를 서버에 전송
-      const response = await axios.post('http://223.62.149.151:8080/api/news', LoginUserRequest);
-      const token = response.data.token;
-
-      sessionStorage.setItem('authToken', token);
+      const response = await axios.post('http://52.203.194.120/api/users/register', UserRequest);
 
       // 회원가입 성공 시 로그인 페이지로 이동
       navigate('/login');
     } catch (error) {
       if (error.response) {
         console.error('Error response:', error.response.data);
-        // 여기서 사용자에게 에러 메시지를 보여줄 수 있습니다.
-        // 예: alert(error.response.data.message);
+        alert('회원가입 실패: ' + error.response.data.message);
       } else {
         console.error('Error registering user:', error);
+        alert('회원가입 실패: 서버와의 연결이 원활하지 않습니다.');
       }
     }
   };
@@ -87,11 +101,11 @@ function MakeId() {
       <form onSubmit={handleSubmit}>
         <label>
           <span>이름</span>
-          <input type="text" placeholder="이름" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <input type="text" placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} />
         </label>
         <label>
           <span>아이디</span>
-          <input type="text" placeholder="아이디" value={userid} onChange={(e) => setUserid(e.target.value)} />
+          <input type="text" placeholder="아이디" value={username} onChange={(e) => setUsername(e.target.value)} />
         </label>
         <label>
           <span>비밀번호</span>
@@ -103,14 +117,14 @@ function MakeId() {
             className={passwordValidationError ? 'password-mismatch' : ''}
           />
           {passwordValidationError && (
-            <p className="password-error">비밀번호는 대/소문자, 숫자를 포함하여 8자 이상이어야 합니다.</p>
+            <p className="password-error">비밀번호는 영문, 숫자, 특수문자를 포함하여 8~16자여야 합니다.</p>
           )}
         </label>
         <label>
           <span>비밀번호 확인</span>
           <input
             type="password"
-            placeholder="비밀번호 입력"
+            placeholder="비밀번호 확인"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className={passwordError ? 'password-mismatch' : ''}
@@ -128,16 +142,18 @@ function MakeId() {
             onChange={(e) => setEmail(e.target.value)}
             className={emailError ? 'email-mismatch' : ''}
           />
-          {emailError && <p className="email-error">잘못된 이메일 형식입니다.</p>}
+          {emailError && <p className="email-error">유효한 이메일 주소를 입력해주세요.</p>}
         </label>
         <label>
           <span>전화번호</span>
           <input
             type="tel"
-            placeholder="010-1234-5678"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            placeholder="01012345678"
+            value={phoneNumber}
+            onChange={(e) => setphoneNumber(e.target.value)}
+            className={phoneError ? 'phone-mismatch' : ''}
           />
+          {phoneError && <p className="phone-error">올바른 휴대폰 번호 형식이 아닙니다.</p>}
         </label>
         <button type="submit">회원가입</button>
       </form>

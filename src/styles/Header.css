@@ -7,7 +7,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: -20px; /* 기존 margin 값 유지 */
+  margin-top: -650px; /* 기존 margin 값 유지 */
   margin-left: 65px; /* 기존 margin 값 유지 */
   position: sticky; /* sticky로 변경 */
   top: -150px; /* 스크롤 시 고정될 위치 설정 (margin-top과 일치) */
@@ -27,7 +27,7 @@ body {
   display: flex;
   align-items: center; 
   margin-bottom: 59px;
-  margin-right: -480px;
+  margin-right: -450px;
 }
 
 .logo2 {
@@ -35,7 +35,7 @@ body {
   margin-top: -17px;
   position: relative; 
   z-index: 3;
-  margin-right: 290px; 
+  margin-right: 460px; 
 }
 
 .blackScreen {
@@ -54,30 +54,15 @@ body {
   right: 0; 
 }
 
-.username {
-  margin: 0 10px; 
-  font-size: 15px; 
-  color: #eee8e8; 
-  display: flex;
-  align-items: center; 
-  height: 50px; 
-  margin-left: 130px; 
+.authLink {
+  margin-right:5px;
+  margin-left: 13px;
+  font-size: 16px;
+  color: #fff;  /* 글자 색상을 흰색으로 */
+  text-decoration: none;  /* 밑줄 없애기 */
 }
 
-.logoutbutton {
-  padding: 1px 3px; 
-  font-size: 13px; 
-  background-color: #211e1e; 
-  color: white; 
-  border: none; 
-  border-radius: 1px; 
-  cursor: pointer; 
-  display: flex; 
-  align-items: center; 
-  height: 25px; 
-  margin-left: 3px; 
-}
-
-.logoutbutton:hover {
-  background-color: #ded2d1; 
+.authLink:hover {
+  text-decoration: underline;  /* 마우스 오버 시 밑줄 추가 (원하는 경우) */
+  color: #ddd; /* 마우스 오버 시 약간 밝은 색상으로 변경 (선택사항) */
 }

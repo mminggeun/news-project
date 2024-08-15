@@ -10,11 +10,11 @@ function Header() {
                 <div className="blackScreen leftBlackScreen"></div>
                 <div className="header1">
                     <div className="leftSide">
-                        <Link to="/home">
+                        <Link to="/">
                             <img src={Logo2} alt="News Logo" className="logo2" />
                         </Link>
-                        <span className="username">username 님</span>
-                        <button className="logoutbutton">로그아웃</button>
+                        <Link to="/login" className="authLink">Login</Link>
+                        <Link to="/makeid" className="authLink">Register</Link>
                     </div>
                 </div>
                 <div className="blackScreen rightBlackScreen"></div>
