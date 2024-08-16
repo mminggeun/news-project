@@ -16,7 +16,7 @@
   
   .date-container {
   position: absolute;
-  margin-top: -800px;
+  margin-top: -780px;
   left: -48px;
   display: flex;
   align-items: center;
@@ -355,4 +355,15 @@
 
 .sidebar-link:hover {
   color: #007bff; /* 링크에 마우스를 올렸을 때 색상 변경 */
+}
+
+.sidebar-link:not(:last-child)::after {
+  content: ""; /* 가상 요소의 내용 설정 */
+  position: absolute; /* 절대 위치 설정 */
+  left: 8px; /* 왼쪽 정렬 */
+  right: 0; /* 오른쪽 정렬 */
+  bottom: 90px; /* 아래쪽 정렬 */
+  height: 1px; /* 줄의 두께 */
+  width: 80%;
+  background-color: #ccc; /* 줄의 색상 */
 }

@@ -57,12 +57,12 @@ body {
 .authLink {
   margin-right:5px;
   margin-left: 13px;
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;  /* 글자 색상을 흰색으로 */
   text-decoration: none;  /* 밑줄 없애기 */
 }
 
 .authLink:hover {
   text-decoration: underline;  /* 마우스 오버 시 밑줄 추가 (원하는 경우) */
-  color: #ddd; /* 마우스 오버 시 약간 밝은 색상으로 변경 (선택사항) */
+  color: #fff; /* 마우스 오버 시 약간 밝은 색상으로 변경 (선택사항) */
 }

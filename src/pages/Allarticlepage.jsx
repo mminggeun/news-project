@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import articlelist from './articlelist';
+import articlelist from './articlelisttesttest';
 import './Allarticlepage.css';
 
 function Allarticlepage() {

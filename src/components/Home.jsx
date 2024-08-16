@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import articlelist from '../pages/articlelist';
+import articlelist from '../pages/articlelisttesttest';
 import footerimage from '../assets/footerimage.png';
 import '../styles/Home.css';
 
 function Home() {
     const [currentDate] = useState(new Date());
     const [searchTerm, setSearchTerm] = useState('');
-    const navigate = useNavigate();
 
     // 오늘자 뉴스 필터링 및 조회수로 정렬 후 상위 14개 선택
     const filteredArticles = articlelist.filter(article => {
@@ -63,17 +61,17 @@ function Home() {
                 {topArticle && (
                     <div className="top-article">
                         <div className="top-article-content">
-                        <Link to={`/article/${topArticle.id}`}>  
-                            <h3>     
-                                {splitText(truncatedTitle, 40).map((line, index) => (
-                                    <span key={index}>{line}<br /></span>
-                                ))}
-                            </h3>
-                            <p>
-                                {splitText(truncatedContent, 50).map((line, index) => (
-                                    <span key={index}>{line}<br /></span>
-                                ))}
-                            </p>
+                            <Link to={`/article/${topArticle.id}`}>
+                                <h3>
+                                    {splitText(truncatedTitle, 40).map((line, index) => (
+                                        <span key={index}>{line}<br /></span>
+                                    ))}
+                                </h3>
+                                <p>
+                                    {splitText(truncatedContent, 50).map((line, index) => (
+                                        <span key={index}>{line}<br /></span>
+                                    ))}
+                                </p>
                             </Link>
                         </div>
                         <img src={topArticle.imageUrl} className="top-article-image" alt="Top article" />
@@ -96,54 +94,59 @@ function Home() {
                             return (
                                 <div key={index} className="last-article">
                                     <div className="last-article-content">
-                                    <Link to={`/article/${article.id}`}>   
-                                        <h3>    
-                                            {splitText(truncatedTitle, 70).map((line, lineIndex) => (
-                                                <span key={lineIndex}>{line}<br /></span>
-                                            ))}
-                                        </h3>
-                                        <p>
-                                            {splitText(truncatedContent, 450).map((line, lineIndex) => (
-                                                <span key={lineIndex}>{line}<br /></span>
-                                            ))}
-                                        </p>
+                                        <Link to={`/article/${article.id}`}>
+                                            <h3>
+                                                {splitText(truncatedTitle, 70).map((line, lineIndex) => (
+                                                    <span key={lineIndex}>{line}<br /></span>
+                                                ))}
+                                            </h3>
+                                            <p>
+                                                {splitText(truncatedContent, 450).map((line, lineIndex) => (
+                                                    <span key={lineIndex}>{line}<br /></span>
+                                                ))}
+                                            </p>
                                         </Link>
-                                    </div>  
-                                    <img src={article.imageUrl} className="last-article-image" alt="Last article" />                    
+                                    </div>
+                                    <img src={article.imageUrl} className="last-article-image" alt="Last article" />
                                 </div>
                             );
                         })}
-                        </div>
+                    </div>
                 )}
                 <div className="other-articles">
                     <p>오늘의 인기 뉴스</p>
                     {otherArticles.map((article, index) => (
                         <div key={index} className="other-article">
                             <span className="article-index">{index + 1}</span>
-                            <Link to={`/article/${article.id}`}> 
-                            <h4>{splitText(article.title.slice(0, 35), 14).map((line, lineIndex) => (
-                                <span key={lineIndex}>{line}<br /></span>
-                            ))}</h4></Link>
+                            <Link to={`/article/${article.id}`}>
+                                <h4>
+                                    {splitText(article.title.slice(0, 35), 14).map((line, lineIndex) => (
+                                        <span key={lineIndex}>{line}<br /></span>
+                                    ))}
+                                </h4>
+                            </Link>
                             <img src={article.imageUrl} className="other-article-image" alt="Other article" />
                         </div>
                     ))}
                 </div>
             </div>
-            <div className="sidebar1">  
+            <div className="sidebar1">
                 <div className="sidebar-box">
                     <div className="sidebar-top"></div>
-                        <div className="sidebar-content">
-                            <Link to="/mypage" className="sidebar-link">스크랩한 <br/>기사 <br/> 보러가기</Link>
-                            <Link to="/Allarticlepage" className="sidebar-link">전체기사 <br/>보러가기</Link>
-                        </div>
+                    <div className="sidebar-content">
+                        <Link to="/mypage" className="sidebar-link">스크랩한 <br />기사 <br /> 보러가기</Link>
+                        <Link to="/Allarticlepage" className="sidebar-link">전체기사 <br />보러가기</Link>
+                    </div>
                     <div className="sidebar-bottom"></div>
                 </div>
             </div>
             <div className="footer">
-                <img src={footerimage} className="footerimage" />
-                <p>SWENNEWS 신문 등록·발행일자:2024년 8월 19일  
-                주소:경남 창원시 의창구 창원대학로 20 (퇴촌동)
-                © SWENNEWS신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지</p>
+                <img src={footerimage} className="footerimage" alt="Footer" />
+                <p>
+                    SWENNEWS 신문 등록·발행일자:2024년 8월 19일  
+                    주소:경남 창원시 의창구 창원대학로 20 (퇴촌동)
+                    © SWENNEWS신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지
+                </p>
             </div>
         </div>
     );

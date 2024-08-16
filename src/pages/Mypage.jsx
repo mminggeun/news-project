@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import articlelist from './articlelist';
+import articlelist from './articlelisttesttest';
 import './Mypage.css';
 
 function Mypage() {

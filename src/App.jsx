@@ -6,6 +6,7 @@ import MakeId from './pages/MakeId';
 import Article from './pages/Article'; 
 import Allarticlepage from './pages/Allarticlepage';
 import Mypage from './pages/Mypage';
+import Articletest from './pages/Articletest';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -25,6 +26,11 @@ function App() {
             <>
                <Header />
                <Allarticlepage/>
+            </>} />
+            <Route path="/articletest" element={
+            <>
+               <Header />
+               <Articletest/>
             </>} /> 
             <Route path="/mypage" element={
             <>
