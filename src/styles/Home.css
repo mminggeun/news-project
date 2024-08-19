@@ -16,7 +16,7 @@
   
   .date-container {
   position: absolute;
-  margin-top: -780px;
+  margin-top: -880px;
   left: -48px;
   display: flex;
   align-items: center;
@@ -65,8 +65,8 @@
   
   .articles-container {
   display: flex;
-  margin-left: -25px;
-  margin-top:190px;
+  margin-left: 5px;
+  margin-top:290px;
   }
   
   .top-article {
@@ -80,14 +80,14 @@
   .top-article-image {
   width: 480px;
   height:300px;
-  margin-right: -570px;
-  margin-left: 20px;
+  margin-right: -550px;
+  margin-left: 10px;
   }
   
   .top-article-content {
   display: flex;
   flex-direction: column;
-  margin-left:-28px;
+  margin-left:-58px;
   }
   
   .top-article h3, .top-article p {
@@ -96,21 +96,16 @@
   }
   
   .top-article h3{
+    margin-top: -10px;
   margin-bottom: 10px;
+  margin-left:-17px;
   font-size: 25px;
   }
   
   .top-article-content p {
   font-size: 15px;
   font-weight: 350;
-  }
-  
-  .other-article h4 {
-  margin: 0;
-  font-size: 14px;
-  color: black;
-  line-height:2.3;
-  margin-right:23px;
+  margin-left:-17px;
   }
   
   .other-articles {
@@ -120,8 +115,8 @@
   border-left: 1px solid black;
   padding-left: 37px;
   padding-top: -35px;
-  margin-right:50px;
-  height: 1155px;
+  margin-right:145px;
+  height: 1185px;
   }
   
   .other-article {
@@ -129,19 +124,20 @@
   margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
-  margin-right: 20px;
+  margin-right: -20px;
   position: relative; 
   padding-bottom: 10px; 
   justify-content: space-between;
+  width: calc(130% - 10px);
   }
   
   .other-article::after {
   content: '';
   position: absolute;
-  left: 30px; 
-  bottom: 0; 
+  left: 3cqw; 
+  bottom: -4px; 
   height: 0.5px; 
-  width: calc(100% - 30px); 
+  width: calc(100% - 46px); 
   background-color: lightgray; 
   }
 
@@ -160,16 +156,21 @@
   width: 85px;
   height: 85px;
   }
-  
-  .other-article h4 span {
-  margin-right: 3px; 
-  }
-  
+
+  .other-article h4 {
+    margin:0;
+    font-size: 14px;
+    color: black;
+    line-height:1.5; /* 제목의 줄 높이 조정 */
+    max-width: 150px;
+    white-space: normal; /* 줄 바꿈을 허용 */
+}
+
   .article-index {
   font-size:30px;
   font-weight:650;
   color:black;
-  margin-right:13px;
+  margin-right:14px;
   margin-top:-61px;
   }
   
@@ -184,14 +185,14 @@
     display: column;
     margin-top: 750px;
     flex: 1;
-    margin-right: 158px;
+    margin-right: 218px;
     font-size:17px;
     }
     
     .last-article-image {
     width: 270px;
     height:170px;
-    margin-right: -121px;
+    margin-right: -155px;
     margin-left: 160px;
     }
     
@@ -227,18 +228,18 @@
     bottom: -18px; 
     height: 0.5px; 
     background-color: lightgray; 
-    width: 144%; 
+    width: 153%; 
     margin-left: -23%; 
     }
 
     .last-article:nth-child(1)::before {
       content: ''; 
       position: absolute; 
-      left: -130px; 
-      top: -25px; /* 경계선의 위치를 위쪽으로 조정 */
+      left: -125px; 
+      top: -28px; /* 경계선의 위치를 위쪽으로 조정 */
       height: 0.5px; 
       background-color: black; 
-      width: 144%; /* 경계선의 너비를 100%로 설정 */
+      width: 153%; /* 경계선의 너비를 100%로 설정 */
   }
     
     .last-article:nth-child(4)::after {
@@ -248,7 +249,7 @@
       top: 210px; 
       height: 0.5px; 
       background-color: black; 
-      width: 213%; 
+      width: 233%; 
     }
 
     .last-article h3, .last-article p {
