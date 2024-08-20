@@ -59,7 +59,7 @@ function Home() {
             .sort((a, b) => {
                 return articlelist.indexOf(a) - articlelist.indexOf(b);
             })
-            .slice(0, 14);
+            .slice(0, 15);
 
         setFilteredArticles(filtered);
     }, [articlelist]); // currentDate를 의존성 배열에서 제거
@@ -78,8 +78,8 @@ function Home() {
     const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`;
 
     const topArticle = filteredArticles[0] || {};
-    const otherArticles = filteredArticles.slice(1, 10);
-    const lastArticles = filteredArticles.slice(10, 14);
+    const otherArticles = filteredArticles.slice(1, 11);
+    const lastArticles = filteredArticles.slice(11, 15);
 
     const MAX_CONTENT_LENGTH_TOP = 300;
     const MAX_CONTENT_LENGTH_LAST = 500;
