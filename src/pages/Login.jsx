@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // useEffect 추가
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from './AuthContext'; // AuthContext 가져오기
 import './Login.css';
 import Logo1 from '../assets/newslogo-1.png';
 
 function Login() {
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext); // login 함수 가져오기
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [rememberUsername, setRememberUsername] = useState(false);
 
-    // 컴포넌트가 로드될 때 localStorage에서 저장된 아이디를 불러옴
     useEffect(() => {
         const rememberedUsername = localStorage.getItem('rememberedUsername');
         if (rememberedUsername) {
@@ -23,34 +24,32 @@ function Login() {
         e.preventDefault();
 
         try {
-            // 로그인 요청을 백엔드로 전송
             const response = await axios.post('http://52.203.194.120/api/users/login', {
                 username,
                 password
             });
 
-            // 로그인 성공 시 토큰을 받아서 저장 (예: localStorage 또는 sessionStorage)
             const token = response.data.token;
             localStorage.setItem('authToken', token);
 
-            // 사용자 이름 저장 기능
+            // 로그인 성공 시 사용자 정보를 저장
+            const userData = { username: response.data.username };
+            login(userData);
+
             if (rememberUsername) {
                 localStorage.setItem('rememberedUsername', username);
             } else {
                 localStorage.removeItem('rememberedUsername');
             }
 
-            // 메인 페이지로 이동
             navigate('/');
         } catch (error) {
             console.error('Login failed:', error.response ? error.response.data : error.message);
-            // 로그인 실패 시 사용자에게 알림을 줄 수 있습니다.
             alert('로그인 실패: 아이디나 비밀번호를 확인하세요.');
         }
     };
 
     const handleRegister = () => {
-        // 회원가입 페이지로 이동
         navigate('/makeId');
     };
 
@@ -59,7 +58,6 @@ function Login() {
     };
 
     const handleLogoClick = () => {
-        // 메인 페이지로 이동
         navigate('/');
     };
 

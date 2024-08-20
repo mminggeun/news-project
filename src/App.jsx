@@ -8,48 +8,27 @@ import Allarticlepage from './pages/Allarticlepage';
 import ArticleContext from './pages/ArticleContext';
 import Mypage from './pages/Mypage';
 import { ArticleProvider } from './pages/ArticleContext'; // ArticleProvider import
+import { AuthProvider } from './pages/AuthContext'; // AuthProvider import
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <div className='App'>
       <Router>
-        <ArticleProvider>
-          <Routes>
-            <Route path="/" element={
-              <>
-                <Header />
-                <Home />
-              </>
-            } />
-            <Route path="/login" element={<Login />} />
-            <Route path="/makeId" element={<MakeId />} />
-            <Route path="/allarticlepage" element={
-              <>
-                <Header />
-                <Allarticlepage/>
-              </>}
-            />
-            <Route path="/articlecontext" element={
-              <>
-                <Header />
-                <ArticleContext/>
-              </>}
-            />
-            <Route path="/mypage" element={
-              <>
-                <Header />
-                <Mypage/>
-              </>}
-            />
-            <Route path="/article/:id" element={
-              <>
-                <Header />
-                <Article />
-              </>}
-            />
-          </Routes>
-        </ArticleProvider>
+        <AuthProvider> {/* AuthProvider로 애플리케이션 감싸기 */}
+          <ArticleProvider>
+            <Header /> {/* Header는 모든 페이지에 공통으로 나타남 */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/makeId" element={<MakeId />} />
+              <Route path="/allarticlepage" element={<Allarticlepage />} />
+              <Route path="/articlecontext" element={<ArticleContext />} />
+              <Route path="/mypage" element={<Mypage />} />
+              <Route path="/article/:id" element={<Article />} />
+            </Routes>
+          </ArticleProvider>
+        </AuthProvider>
       </Router>
     </div>
   );
