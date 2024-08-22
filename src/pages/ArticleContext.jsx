@@ -14,15 +14,15 @@ export function ArticleProvider({ children }) {
         const response = await axios.get('http://52.203.194.120/api/news?page=0&size=15');
         console.log('Fetched articles:', response.data);
 
-        const articles = Array.isArray(response.data)
-          ? response.data.map(article => ({
-              id: article.id,
-              title: article.title,
-              summarizedContent: article.summarizedContent,
-              originalcontent: article.originalcontent || "No content",
-              date: article.publishedAt,
-              views: article.viewCount || 0,
-              imageUrl: article.imageUrl || "https://example.com/default.jpg"
+        // 데이터를 추출하는 로직 수정
+        const articles = Array.isArray(response.data[1])
+          ? response.data[1].map(item => ({
+              id: item[1].id, // Long -> number
+              title: item[1].title, // String -> string
+              summarizedContent: item[1].summarizedContent, // String -> string
+              publishedAt: item[1].publishedAt, // 서버에서 받은 LocalDate 그대로 사용
+              imageUrl: item[1].imageUrl || "https://example.com/default.jpg", // 기본 이미지 설정
+              viewCount: item[1].viewCount || 0, // Long -> number
             }))
           : [];
         setArticlelist(articles);

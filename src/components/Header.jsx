@@ -24,7 +24,7 @@ function Header() {
                         </Link>
                         {user ? ( // 로그인 상태에 따른 동적 렌더링
                             <>
-                                <span className="namelink">{user.username}</span>
+                                <span className="namelink">{user.name} 님</span>
                                 <span className="logoutlink" onClick={handleLogout}>Logout</span>
                             </>
                         ) : (

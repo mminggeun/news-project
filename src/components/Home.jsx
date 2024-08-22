@@ -7,11 +7,9 @@ import '../styles/Home.css';
 function Home() {
     const { articlelist } = useContext(ArticleContext);
 
-    // ArticleList를 콘솔에 출력하여 확인
     console.log('ArticleList:', articlelist);
 
-    // 특정 날짜를 기준으로 설정
-    const specificDate = new Date('2024-08-15'); // 특정 날짜
+    const specificDate = new Date('2024-08-20');
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredArticles, setFilteredArticles] = useState([]);
 
@@ -21,22 +19,21 @@ function Home() {
             return;
         }
 
-        // 날짜 문자열을 Date 객체로 변환하는 함수
         const parseDate = (dateString) => {
-            // 하이픈(-)을 제거하여 YYYYMMDD 형식으로 변환
+            if (!dateString) return new Date(NaN); // dateString이 존재하지 않을 경우 Invalid Date 반환
+
             const normalizedDateString = dateString.replace(/-/g, '');
 
             if (normalizedDateString.length !== 8) {
                 console.error('Invalid date string length:', dateString);
-                return new Date(NaN); // 잘못된 형식의 문자열일 경우 Invalid Date 반환
+                return new Date(NaN);
             }
 
             const year = parseInt(normalizedDateString.slice(0, 4), 10);
-            const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1; // 월은 0부터 시작
+            const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
             const day = parseInt(normalizedDateString.slice(6, 8), 10);
             const date = new Date(year, month, day);
 
-            // 디버깅: 생성된 날짜 객체와 년, 월, 일을 확인
             console.log('Parsed Date:', dateString, '=>', date, 'Year:', year, 'Month:', month, 'Day:', day);
 
             return date;
@@ -44,25 +41,22 @@ function Home() {
 
         const filtered = articlelist
             .filter(article => {
-                const articleDate = parseDate(article.date);
+                const articleDate = parseDate(article.publishedAt);
 
-                // 특정 날짜와 기사 날짜 비교
                 const isSameDay = (
                     articleDate.getFullYear() === specificDate.getFullYear() &&
                     articleDate.getMonth() === specificDate.getMonth() &&
                     articleDate.getDate() === specificDate.getDate()
                 );
 
-                console.log('Filtered Article Date:', article.date, '=>', articleDate, 'Same Day:', isSameDay);
+                console.log('Filtered Article Date:', article.publishedAt, '=>', articleDate, 'Same Day:', isSameDay);
                 return isSameDay;
             })
-            .sort((a, b) => {
-                return articlelist.indexOf(a) - articlelist.indexOf(b);
-            })
+            .sort((a, b) => articlelist.indexOf(a) - articlelist.indexOf(b))
             .slice(0, 15);
 
         setFilteredArticles(filtered);
-    }, [articlelist]); // currentDate를 의존성 배열에서 제거
+    }, [articlelist]);
 
     console.log('Specific Date:', specificDate);
     console.log('Filtered Articles:', filteredArticles);
@@ -87,7 +81,9 @@ function Home() {
     const truncateText = (text, maxLength) =>
         text && text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 
-    const truncatedContentTop = topArticle.summarizedContent ? truncateText(topArticle.summarizedContent, MAX_CONTENT_LENGTH_TOP) : '';
+    const truncatedContentTop = topArticle.summarizedContent
+        ? truncateText(topArticle.summarizedContent, MAX_CONTENT_LENGTH_TOP)
+        : '';
 
     return (
         <div className="content-wrapper">
@@ -108,7 +104,7 @@ function Home() {
                     <div className="top-article">
                         <div className="top-article-content">
                             <Link to={`/article/${topArticle.id}`}>
-                                <h3>{topArticle.title}</h3> {/* 제목 자르기 제거 */}
+                                <h3>{topArticle.title}</h3>
                                 <p>{truncatedContentTop}</p>
                             </Link>
                         </div>
@@ -124,7 +120,7 @@ function Home() {
                                 <div key={index} className="last-article">
                                     <div className="last-article-content">
                                         <Link to={`/article/${article.id}`}>
-                                            <h3>{article.title}</h3> {/* 제목 자르기 제거 */}
+                                            <h3>{article.title}</h3>
                                             <p>{truncatedContentLast}</p>
                                         </Link>
                                     </div>
@@ -140,7 +136,7 @@ function Home() {
                         <div key={index} className="other-article">
                             <span className="article-index">{index + 1}</span>
                             <Link to={`/article/${article.id}`}>
-                                <h4>{article.title}</h4> 
+                                <h4>{article.title}</h4>
                             </Link>
                             <img src={article.imageUrl} className="other-article-image" alt="Other article" />
                         </div>

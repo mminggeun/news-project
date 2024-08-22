@@ -11,7 +11,7 @@ function MakeId() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [phoneNumber, setphoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [passwordValidationError, setPasswordValidationError] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -69,17 +69,18 @@ function MakeId() {
     try {
       // 회원가입 정보를 백엔드의 UserRequest DTO에 맞게 구성
       const UserRequest = {
-        name,       // 서버의 'name' 필드에 해당
-        username,     // 서버의 'username' 필드에 해당
+        name,
+        username,
         password,
         email,
-        phoneNumber    // 서버의 'phoneNumber' 필드에 해당
+        phoneNumber
       };
-
+      console.log(UserRequest);
       // 회원가입 정보를 서버에 전송
-      const response = await axios.post('http://52.203.194.120/api/users/register', UserRequest);
+      await axios.post('http://52.203.194.120/api/users/register', UserRequest);
 
       // 회원가입 성공 시 로그인 페이지로 이동
+      alert('회원가입이 성공적으로 완료되었습니다. 이제 로그인하세요.');
       navigate('/login');
     } catch (error) {
       if (error.response) {
@@ -150,7 +151,7 @@ function MakeId() {
             type="tel"
             placeholder="01012345678"
             value={phoneNumber}
-            onChange={(e) => setphoneNumber(e.target.value)}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             className={phoneError ? 'phone-mismatch' : ''}
           />
           {phoneError && <p className="phone-error">올바른 휴대폰 번호 형식이 아닙니다.</p>}

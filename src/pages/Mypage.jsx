@@ -1,41 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import articlelist from './articlelisttesttest';
+import axios from 'axios';
 import './Mypage.css';
 
 function Mypage() {
     const [currentDate] = useState(new Date());
     const [currentPage, setCurrentPage] = useState(1);
-
-    // 스크랩한 기사만 필터링
-    const scrapedArticles = articlelist.filter(article => article.scrap === 1);
+    const [scrapedArticles, setScrapedArticles] = useState([]); // 서버에서 가져올 스크랩 기사들
+    const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+    const [loading, setLoading] = useState(true); // 로딩 상태
+    const [error, setError] = useState(null); // 에러 상태
     const articlesPerPage = 5; // 한 페이지당 보여줄 기사 수
-    const totalArticles = scrapedArticles.length; // 스크랩한 기사 수
-    const totalPages = Math.ceil(totalArticles / articlesPerPage); // 페이지 수
 
     const navigate = useNavigate();
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const fullFormattedDate = currentDate.toLocaleDateString('ko-KR', options);
-    const dayOfWeek = currentDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0); 
-    const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
-    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`;
 
-    const splitText = (text, length) => {
-        const regex = new RegExp(`.{1,${length}}`, 'g');
-        return text.match(regex) || [];
+    const fetchScrapedArticles = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const response = await axios.get('http://52.203.194.120/api/favorites', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    page: currentPage - 1,
+                    size: articlesPerPage,
+                },
+            });
+
+            const { data } = response;
+            console.log(response.data)
+
+            const transformedArticles = data[1].map((item, index) => ({
+                id: 226 - index,
+                imageUrl: item[1].imageUrl || 'https://example.com/default.jpg',
+                publishedAt: item[1].publishedAt,
+                summarizedContent: item[1].summarizedContent,
+                title: item[1].title,
+                viewCount: 0
+            }));
+
+            setScrapedArticles(transformedArticles);
+            setTotalPages(Math.ceil(response.headers['x-total-count'] / articlesPerPage));
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching scraped articles:', error);
+            setError('스크랩된 기사를 불러오는데 실패했습니다.');
+            setLoading(false);
+        }
     };
+
+    useEffect(() => {
+        fetchScrapedArticles();
+    }, [currentPage]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    const MaxTitleLength = 60; // 최대 제목 길이 설정
-    const MaxContentLength = 300; // 최대 내용 길이 설정
+    const handleDeleteArticle = async (articleId) => {
+        const token = localStorage.getItem('authToken');
+        try {
+            console.log(`Attempting to unsave article with ID: ${articleId}`);
+            await axios.delete(`http://52.203.194.120/api/favorites/${articleId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+    
+            // 상태에서 스크랩 취소한 기사를 제거
+            setScrapedArticles((prevArticles) => prevArticles.filter(article => article.id !== articleId));
+            alert('스크랩이 취소되었습니다.');
+        } catch (error) {
+            console.error('Error unsaving article:', error);
+            console.log('Response data:', error.response ? error.response.data : 'No response data');
+            alert('스크랩 취소에 실패했습니다.');
+        }
+    };
+    
 
-    // 페이지네이션을 위한 시작 및 끝 인덱스 계산
-    const startIndex = (currentPage - 1) * articlesPerPage;
-    const endIndex = startIndex + articlesPerPage;
-    const currentArticles = scrapedArticles.slice(startIndex, endIndex); // 현재 페이지에 해당하는 기사들
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const fullFormattedDate = currentDate.toLocaleDateString('ko-KR', options);
+    const dayOfWeek = currentDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0);
+    const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
+    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`;
+
+    const MaxTitleLength = 60;
+    const MaxContentLength = 300;
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
 
     return (
         <div className="content-wrapper-1">
@@ -47,23 +105,28 @@ function Mypage() {
             </div>
             <div className="articles-container-1-1">
                 <div className="all-articles-1-1">
-                    {currentArticles.length > 0 ? (
-                        currentArticles.map((article, index) => {
+                    {scrapedArticles.length > 0 ? (
+                        scrapedArticles.map((article) => {
                             const truncatedTitle = article.title.length > MaxTitleLength 
                                 ? article.title.slice(0, MaxTitleLength) + '...' 
                                 : article.title;
 
-                            const truncatedContent = article.content.length > MaxContentLength 
-                                ? article.content.slice(0, MaxContentLength) + '...' 
-                                : article.content;
+                            const truncatedContent = article.summarizedContent.length > MaxContentLength 
+                                ? article.summarizedContent.slice(0, MaxContentLength) + '...' 
+                                : article.summarizedContent;
 
                             return (
-                                <div key={index} className="all-article-1-1">
+                                <div key={article.id} className="all-article-1-1">
                                     <div className="all-article-content-1-1">
                                         <Link to={`/article/${article.id}`}>   
                                             <h3>{truncatedTitle}</h3>
                                             <p>{truncatedContent}</p>
                                         </Link>
+                                        <button 
+                                            onClick={() => handleDeleteArticle(article.id)} 
+                                            className="delete-button">
+                                            스크랩 취소
+                                        </button>
                                     </div>
                                     <img src={article.imageUrl} className="all-article-image-1-1" alt="All article-1-1" />
                                 </div>

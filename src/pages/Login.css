@@ -60,34 +60,6 @@
   border-bottom: 1px solid #000; /* 포커스 시 아래쪽 테두리 색상 변경 */
 }
 
-.remember-username {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 2rem;
-  margin-right: -10px;
-  font-size:14px;
-  color: black;
-}
-
-.remember-username label {
-  display: flex;
-  align-items: center;
-  margin-right: 220px;
-  margin-bottom: -1rem;
-}
-
-.remember-username input[type="checkbox"] {
-  margin-right: 0px;
-  margin-bottom: -0.2rem;
-  width: 14px;
-  height: 14px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-}
-
 .register button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -97,6 +69,7 @@
   cursor: pointer;
   width: 320px;
   color: white;
+  margin-top:30px;
 }
 
 .not-member {

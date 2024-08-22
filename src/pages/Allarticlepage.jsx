@@ -1,19 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import ArticleContext from '../pages/ArticleContext';
+import { Link } from 'react-router-dom';
+import ArticleContext from '../pages/ArticleContext'; // ArticleContext 가져오기
 import './Allarticlepage.css';
 
 function Allarticlepage() {
-    const { articlelist } = useContext(ArticleContext);
-    const navigate = useNavigate();
-
-    // 특정 날짜를 기준으로 설정
-    const specificDate = new Date('2024-08-15'); // 원하는 날짜로 설정
-
-    // 페이지네이션을 위한 상태
+    const { articlelist } = useContext(ArticleContext); // ArticleContext에서 articlelist 가져오기
     const [currentPage, setCurrentPage] = useState(1);
     const articlesPerPage = 5;
     const [filteredArticles, setFilteredArticles] = useState([]);
+
+    const specificDate = new Date('2024-08-20'); // 원하는 날짜로 설정
 
     useEffect(() => {
         if (!articlelist || articlelist.length === 0) {
@@ -21,10 +17,10 @@ function Allarticlepage() {
             return;
         }
 
-        // 날짜 문자열을 Date 객체로 변환하는 함수 (Home 컴포넌트와 동일하게 사용)
         const parseDate = (dateString) => {
-            const normalizedDateString = dateString.replace(/-/g, '');
+            if (!dateString) return new Date(NaN); // dateString이 존재하지 않을 경우 Invalid Date 반환
 
+            const normalizedDateString = dateString.replace(/-/g, '');
             if (normalizedDateString.length !== 8) {
                 console.error('Invalid date string length:', dateString);
                 return new Date(NaN);
@@ -36,10 +32,9 @@ function Allarticlepage() {
             return new Date(year, month, day);
         };
 
-        // 특정 날짜의 기사만 필터링
         const filtered = articlelist
             .filter(article => {
-                const articleDate = parseDate(article.date);
+                const articleDate = parseDate(article.publishedAt);
                 return (
                     articleDate.getFullYear() === specificDate.getFullYear() &&
                     articleDate.getMonth() === specificDate.getMonth() &&
@@ -54,7 +49,6 @@ function Allarticlepage() {
     const totalArticles = filteredArticles.length;
     const totalPages = Math.ceil(totalArticles / articlesPerPage);
 
-    // 현재 페이지에 따라 보여줄 기사 선택
     const indexOfLastArticle = currentPage * articlesPerPage;
     const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
     const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
@@ -69,21 +63,10 @@ function Allarticlepage() {
         setCurrentPage(pageNumber);
     };
 
-    const handleDateChange = (direction) => {
-        const newDate = new Date(specificDate);
-        if (direction === 'prev') {
-            newDate.setDate(newDate.getDate() - 1);
-        } else if (direction === 'next') {
-            newDate.setDate(newDate.getDate() + 1);
-        }
-        setCurrentPage(1);
-        navigate(`/allarticlepage?date=${newDate.toISOString().slice(0, 10)}`); // 날짜 변경 시 페이지 이동
-    };
-
-    // 현재 페이지에 따라 보여줄 페이지 번호 계산
+    // 페이지 번호를 계산하여 표시하는 함수
     const getVisiblePages = () => {
         const visiblePages = [];
-        const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1; // 현재 페이지에 따라 시작 페이지 계산
+        const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
         for (let i = 0; i < 3; i++) {
             const page = startPage + i;
             if (page <= totalPages) {
@@ -98,9 +81,7 @@ function Allarticlepage() {
     return (
         <div className="all-artilclepage">
             <div className="artilclepage-date">
-                <span className="arrow-text" onClick={() => handleDateChange('prev')}>◀</span>
                 <p className="date-text-1">{finalFormattedDate}</p>
-                <span className="arrow-text" onClick={() => handleDateChange('next')}>▶</span>
             </div>
             <div className="artilclepage-title">
                 <h2 className="page-title">오늘자 전체 기사</h2>
@@ -110,9 +91,8 @@ function Allarticlepage() {
                     <div className="all-articles-1">
                         {currentArticles.map((article, index) => {
                             const maxContentLength = 300;
-
-                            const truncatedContent = article.summarizedContent.length > maxContentLength 
-                                ? article.summarizedContent.slice(0, maxContentLength) + '...' 
+                            const truncatedContent = article.summarizedContent.length > maxContentLength
+                                ? article.summarizedContent.slice(0, maxContentLength) + '...'
                                 : article.summarizedContent;
 
                             return (
@@ -133,18 +113,26 @@ function Allarticlepage() {
                 )}
             </div>
             <div className="page-button">
-                <button className="arrow-button" 
+                <button
+                    className="arrow-button"
                     onClick={() => handlePageChange(Math.max(currentPage - 3, 1))}
-                >◀
+                >
+                    ◀
                 </button>
                 {visiblePages.map(page => (
-                    <button key={page} onClick={() => handlePageChange(page)}
+                    <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
                         className={currentPage === page ? 'active' : ''}
-                    >{page}
+                    >
+                        {page}
                     </button>
                 ))}
-                <button className="arrow-button" onClick={() => handlePageChange(Math.min(currentPage + 3, totalPages))}
-                >▶
+                <button
+                    className="arrow-button"
+                    onClick={() => handlePageChange(Math.min(currentPage + 3, totalPages))}
+                >
+                    ▶
                 </button>
             </div>
         </div>
