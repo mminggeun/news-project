@@ -16,8 +16,8 @@
   
   .date-container {
   position: absolute;
-  margin-top: -880px;
-  left: -48px;
+  margin-top: -850px;
+  left: -102px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -31,8 +31,8 @@
   
   .search-container {
   position: absolute;
-  margin-top: -900px;
-  right: 70px;
+  margin-top: -860px;
+  right: 60px;
   display: flex;
   align-items: center;
   }
@@ -307,7 +307,7 @@
 
 .footer p {
   color: rgb(142, 138, 138);
-  margin-right:260px;
+  margin-right:290px;
   line-height: 2.5; 
   font-size:13px;
   margin-top:40px;
@@ -317,7 +317,7 @@
   width:250px;
   height: 80px;
   object-fit: contain;
-  margin-left:-130px;
+  margin-left:-110px;
   margin-right: 100px;
   margin-top:40px;
 }

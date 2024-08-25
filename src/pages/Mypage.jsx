@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Mypage.css';
 
@@ -11,8 +11,6 @@ function Mypage() {
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 에러 상태
     const articlesPerPage = 5; // 한 페이지당 보여줄 기사 수
-
-    const navigate = useNavigate();
 
     const fetchScrapedArticles = async () => {
         try {
@@ -28,19 +26,24 @@ function Mypage() {
             });
 
             const { data } = response;
-            console.log(response.data)
+            console.log('Fetched data:', data);
 
-            const transformedArticles = data[1].map((item, index) => ({
-                id: 226 - index,
-                imageUrl: item[1].imageUrl || 'https://example.com/default.jpg',
-                publishedAt: item[1].publishedAt,
-                summarizedContent: item[1].summarizedContent,
-                title: item[1].title,
-                viewCount: 0
-            }));
+            // 데이터 파싱
+            const articlesArray = data[1]; // 중첩된 배열에서 필요한 부분만 가져옴
+            const transformedArticles = articlesArray.map((item) => {
+                const articleData = item[1]; // 배열의 두 번째 요소가 실제 기사 데이터
+                return {
+                    id: articleData.newsId,
+                    imageUrl: articleData.imageUrl || 'https://example.com/default.jpg',
+                    publishedAt: articleData.publishedAt,
+                    summarizedContent: articleData.summarizedContent,
+                    title: articleData.title,
+                    viewCount: 0,
+                };
+            });
 
             setScrapedArticles(transformedArticles);
-            setTotalPages(Math.ceil(response.headers['x-total-count'] / articlesPerPage));
+            setTotalPages(Math.ceil(transformedArticles.length / articlesPerPage));
             setLoading(false);
         } catch (error) {
             console.error('Error fetching scraped articles:', error);
@@ -56,27 +59,6 @@ function Mypage() {
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
-
-    const handleDeleteArticle = async (articleId) => {
-        const token = localStorage.getItem('authToken');
-        try {
-            console.log(`Attempting to unsave article with ID: ${articleId}`);
-            await axios.delete(`http://52.203.194.120/api/favorites/${articleId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-    
-            // 상태에서 스크랩 취소한 기사를 제거
-            setScrapedArticles((prevArticles) => prevArticles.filter(article => article.id !== articleId));
-            alert('스크랩이 취소되었습니다.');
-        } catch (error) {
-            console.error('Error unsaving article:', error);
-            console.log('Response data:', error.response ? error.response.data : 'No response data');
-            alert('스크랩 취소에 실패했습니다.');
-        }
-    };
-    
 
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const fullFormattedDate = currentDate.toLocaleDateString('ko-KR', options);
@@ -122,11 +104,6 @@ function Mypage() {
                                             <h3>{truncatedTitle}</h3>
                                             <p>{truncatedContent}</p>
                                         </Link>
-                                        <button 
-                                            onClick={() => handleDeleteArticle(article.id)} 
-                                            className="delete-button">
-                                            스크랩 취소
-                                        </button>
                                     </div>
                                     <img src={article.imageUrl} className="all-article-image-1-1" alt="All article-1-1" />
                                 </div>

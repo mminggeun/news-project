@@ -4,12 +4,12 @@ import axios from 'axios';
 import './Article.css';
 
 function Article() {
-    const { id } = useParams();  // URL에서 newsId를 가져옴
+    const { id } = useParams();  // URL에서 기사 ID를 가져옴
     const navigate = useNavigate();
     const [article, setArticle] = useState(null);
     const [error, setError] = useState(null);
-    const [isScraped, setIsScraped] = useState(false);  // 스크랩 상태 저장
-    const [scrapedArticleId, setScrapedArticleId] = useState(null);  // 스크랩된 기사 ID 저장
+    const [scrapMessage, setScrapMessage] = useState('');
+    const [isScrapped, setIsScrapped] = useState(false);
 
     const fetchArticleById = async (id) => {
         try {
@@ -26,7 +26,21 @@ function Article() {
             const articleData = Array.isArray(response.data) ? response.data[1] : response.data;
             setArticle(articleData);
 
-            checkIfScraped(id, token); // 스크랩 상태 확인
+            // 스크랩된 기사 목록 가져오기 및 상태 확인
+            const favoritesResponse = await axios.get(`http://52.203.194.120/api/favorites`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const favoritesData = Array.isArray(favoritesResponse.data) ? favoritesResponse.data[1] : [];
+
+            // JSON 데이터를 파싱하여 기사의 목록을 추출
+            const articles = favoritesData.map(item => item[1]);  // 각 기사 정보만 추출
+            console.log('Scrapped articles:', articles);
+
+            // 스크랩된 기사 목록을 콘솔에 출력
+            const isArticleScrapped = articles.some(fav => fav.newsId === parseInt(id));
+            setIsScrapped(isArticleScrapped);
         } catch (error) {
             console.error('Fetch error:', error);
             if (error.response) {
@@ -37,65 +51,43 @@ function Article() {
         }
     };
 
-    const checkIfScraped = async (newsId, token) => {
+    const handleScrapArticle = async () => {
         try {
-            const response = await axios.get('http://52.203.194.120/api/favorites', {
+            const token = localStorage.getItem('authToken');
+            const response = await axios.post(`http://52.203.194.120/api/favorites/${id}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
-            console.log('Favorites data:', response.data); // 서버에서 받은 스크랩된 기사들 확인
-            
-            const scrapedArticle = response.data.find(article => article.id === parseInt(newsId, 10));
-            if (scrapedArticle) {
-                setIsScraped(true);
-                setScrapedArticleId(scrapedArticle.id); // 스크랩된 기사 ID 저장
+            if (response.status === 204) {
+                setScrapMessage('기사가 성공적으로 저장되었습니다!');
+                setIsScrapped(true);
+                fetchArticleById(id); // 스크랩된 기사 목록을 다시 가져와 콘솔에 출력
             }
         } catch (error) {
-            console.error('Check if scraped error:', error);
+            console.error('Error saving article:', error);
+            setScrapMessage('기사를 저장하는 데 실패했습니다.');
         }
     };
 
-    const handleScrap = async () => {
+    const handleUnScrapArticle = async () => {
         try {
             const token = localStorage.getItem('authToken');
-            const response = await axios.post(
-                `http://52.203.194.120/api/favorites/${id}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+            const response = await axios.delete(`http://52.203.194.120/api/favorites/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            );
-            console.log('스크랩이 서버에 정상적으로 요청되었습니다.');
-            alert('기사 스크랩 성공!');
-            setScrapedArticleId(response.data.id); // 서버에서 반환된 ID 저장 (서버가 ID를 반환한다고 가정)
-            setIsScraped(true); // 스크랩 상태를 true로 설정
+            });
+
+            if (response.status === 204) {
+                setScrapMessage('기사가 성공적으로 저장 취소되었습니다!');
+                setIsScrapped(false);
+                fetchArticleById(id); // 스크랩된 기사 목록을 다시 가져와 콘솔에 출력
+            }
         } catch (error) {
-            console.error('Scrap error:', error);
-            alert('스크랩에 실패했습니다. 다시 시도해주세요.');
-        }
-    };
-    
-    const handleUnScrap = async () => {
-        try {
-            const token = localStorage.getItem('authToken');
-            await axios.delete(
-                `http://52.203.194.120/api/favorites/${scrapedArticleId}`, // 저장된 스크랩 ID를 사용하여 삭제
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            alert('기사 스크랩 취소 성공!');
-            setIsScraped(false); // 스크랩 상태를 false로 변경
-            setScrapedArticleId(null); // 스크랩 ID 초기화
-        } catch (error) {
-            console.error('UnScrap error:', error);
-            alert('스크랩 취소에 실패했습니다. 다시 시도해주세요.');
+            console.error('Error unsaving article:', error);
+            setScrapMessage('기사를 저장 취소하는 데 실패했습니다.');
         }
     };
 
@@ -121,14 +113,15 @@ function Article() {
                 {article?.originalContent ? (
                     <p className="indi-article-content">{article.originalContent}</p>
                 ) : (
-                    <p className="indi-article-content">Content is not available.</p>
+                    <p className="indi-article-content">내용을 사용할 수 없습니다.</p>
                 )}
             </div>
-            {isScraped ? (
-                <button onClick={handleUnScrap} className="scrap-button">스크랩 취소</button>
+            {isScrapped ? (
+                <button onClick={handleUnScrapArticle} className="scrap-button">스크랩 취소</button>
             ) : (
-                <button onClick={handleScrap} className="scrap-button">스크랩</button>
+                <button onClick={handleScrapArticle} className="scrap-button">이 기사 스크랩하기</button>
             )}
+            {scrapMessage && <p>{scrapMessage}</p>}
             <p onClick={() => navigate(-1)} className="back">Back</p>
         </div>
     );

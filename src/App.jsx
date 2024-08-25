@@ -6,6 +6,7 @@ import MakeId from './pages/MakeId';
 import Article from './pages/Article';
 import Allarticlepage from './pages/Allarticlepage';
 import ArticleContext from './pages/ArticleContext';
+import SearchResults from './pages/SearchResults';
 import Mypage from './pages/Mypage';
 import { ArticleProvider } from './pages/ArticleContext'; // ArticleProvider import
 import { AuthProvider } from './pages/AuthContext'; // AuthProvider import
@@ -23,6 +24,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/makeId" element={<MakeId />} />
               <Route path="/allarticlepage" element={<Allarticlepage />} />
+              <Route path="/search" element={<SearchResults />} /> {/* 검색 결과 페이지 경로 */}
               <Route path="/articlecontext" element={<ArticleContext />} />
               <Route path="/mypage" element={<Mypage />} />
               <Route path="/article/:id" element={<Article />} />

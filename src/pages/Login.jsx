@@ -8,7 +8,7 @@ import Logo1 from '../assets/newslogo-1.png';
 function Login() {
     const navigate = useNavigate();
     const { login } = useContext(AuthContext); // login 함수 가져오기
-    const [username, setUsername] = useState('');  // 여전히 로그인 요청을 위해 필요
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async (e) => {
@@ -24,7 +24,7 @@ function Login() {
     
             console.log("Response Data:", response.data);  // 응답 데이터를 콘솔에 출력
     
-            // Authorization 헤더에서 토큰 가져오기
+            // Authorization 헤더에서 액세스 토큰 가져오기
             let accessToken = response.headers["authorization"] || response.headers["Authorization"];
             console.log("Received access token:", accessToken);
     
@@ -34,16 +34,11 @@ function Login() {
             }
     
             if (accessToken) {
-                // 서버에서 받아온 사용자 정보 중 name만 저장
                 const { name } = response.data;  // 서버 응답에서 name 필드만 추출
-    
-                // name만 저장 및 로그인 처리
                 console.log("User Data to be saved:", { name });
                 login({ name });  // name만 저장
                 localStorage.setItem('authToken', accessToken);
-    
-                // 홈 화면으로 이동
-                navigate('/');
+                navigate('/'); // 홈 화면으로 이동
             } else {
                 console.error('Token not found in the response');
                 alert('로그인 실패: 토큰을 받아올 수 없습니다.');
@@ -65,7 +60,7 @@ function Login() {
                     <img src={Logo1} alt="Logo1" className="logo1" onClick={() => navigate('/')} />
                 </div>
                 <h1>회원로그인</h1>
-                <p>SWENNEWS 아이디와 비밀번호를 입력하세요</p>
+                <p>지구촌 소식 아이디와 비밀번호를 입력하세요</p>
                 <form onSubmit={handleLogin}>
                     <label>
                         <input 
@@ -88,7 +83,7 @@ function Login() {
             </div>
             <div className="not-member">
                 <div className="not-member-border">
-                    <p>아직 SWENNEWS 회원이 아니신가요?</p>
+                    <p>아직 지구촌 소식 회원이 아니신가요?</p>
                     <button className="register-btn" onClick={handleRegister}>
                         회원가입
                     </button>

@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import ArticleContext from '../pages/ArticleContext';
 import footerimage from '../assets/footerimage.png';
 import '../styles/Home.css';
 
 function Home() {
     const { articlelist } = useContext(ArticleContext);
-
-    console.log('ArticleList:', articlelist);
+    const navigate = useNavigate(); // useNavigate 훅 사용
 
     const specificDate = new Date('2024-08-20');
     const [searchTerm, setSearchTerm] = useState('');
@@ -20,10 +20,9 @@ function Home() {
         }
 
         const parseDate = (dateString) => {
-            if (!dateString) return new Date(NaN); // dateString이 존재하지 않을 경우 Invalid Date 반환
+            if (!dateString) return new Date(NaN);
 
             const normalizedDateString = dateString.replace(/-/g, '');
-
             if (normalizedDateString.length !== 8) {
                 console.error('Invalid date string length:', dateString);
                 return new Date(NaN);
@@ -33,8 +32,6 @@ function Home() {
             const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
             const day = parseInt(normalizedDateString.slice(6, 8), 10);
             const date = new Date(year, month, day);
-
-            console.log('Parsed Date:', dateString, '=>', date, 'Year:', year, 'Month:', month, 'Day:', day);
 
             return date;
         };
@@ -49,7 +46,6 @@ function Home() {
                     articleDate.getDate() === specificDate.getDate()
                 );
 
-                console.log('Filtered Article Date:', article.publishedAt, '=>', articleDate, 'Same Day:', isSameDay);
                 return isSameDay;
             })
             .sort((a, b) => articlelist.indexOf(a) - articlelist.indexOf(b))
@@ -57,13 +53,6 @@ function Home() {
 
         setFilteredArticles(filtered);
     }, [articlelist]);
-
-    console.log('Specific Date:', specificDate);
-    console.log('Filtered Articles:', filteredArticles);
-
-    if (!articlelist || articlelist.length === 0) {
-        return <div>Loading...</div>;
-    }
 
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const fullFormattedDate = specificDate.toLocaleDateString('ko-KR', options);
@@ -85,6 +74,29 @@ function Home() {
         ? truncateText(topArticle.summarizedContent, MAX_CONTENT_LENGTH_TOP)
         : '';
 
+    // 검색 기능 추가: 검색 결과 페이지로 리디렉션
+    const handleSearch = async () => {
+        if (searchTerm.trim() !== '') {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get(`http://52.203.194.120/api/search-history`, {
+                    params: { query: searchTerm },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                // 받은 데이터 구조화
+                const structuredResults = response.data[1].map(item => item[1]); // 중첩 배열에서 필요한 정보만 추출
+
+                console.log('Search Results:', structuredResults);
+                navigate('/search', { state: { results: structuredResults } }); // 검색 결과와 함께 /search 경로로 이동
+            } catch (error) {
+                console.error('Error during search:', error);
+            }
+        }
+    };
+
     return (
         <div className="content-wrapper">
             <div className="search-container">
@@ -94,7 +106,7 @@ function Home() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button onClick={() => setSearchTerm(searchTerm)}>검색</button>
+                <button onClick={handleSearch}>검색</button>
             </div>
             <div className="date-container">
                 <p className="date-text">{finalFormattedDate}</p>
@@ -160,9 +172,9 @@ function Home() {
             <div className="footer">
                 <img src={footerimage} className="footerimage" alt="Footer" />
                 <p>
-                    SWENNEWS 신문 등록·발행일자:2024년 8월 19일  
+                    지구촌 소식 신문 등록·발행일자:2024년 8월 19일  
                     주소:경남 창원시 의창구 창원대학로 20 (퇴촌동)
-                    © SWENNEWS신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지
+                    © 지구촌 소식 신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지
                 </p>
             </div>
         </div>
