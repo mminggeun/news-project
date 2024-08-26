@@ -24,7 +24,7 @@
 
 .make-id label {
     width: 100%;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.3rem;
     margin-right: 21px;
 }
 
@@ -68,10 +68,11 @@
 }
 
 .logo1 {
-    width: 500px;
+    width: 300px;
     height: auto;
     cursor: pointer;
-    margin-left: 45px;
+    margin-left: -20px;
+    margin-bottom: 30px;
 }
 
 .password-error {

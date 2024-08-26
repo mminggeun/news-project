@@ -29,8 +29,8 @@ function Header() {
                             </>
                         ) : (
                             <>
-                                <Link to="/login" className="authLink">Login</Link>
-                                <Link to="/makeid" className="authLink">Register</Link>
+                                <Link to="/login" className="authLink1">Login</Link>
+                                <Link to="/makeid" className="authLink2">Register</Link>
                             </>
                         )}
                     </div>

@@ -4,17 +4,17 @@
   align-items: center;
   justify-content: flex-start;
   height: auto;
-  margin-top: 448px;
+  margin-top: 31rem;
 }
 
 .logo1-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .logo1 {
-  width: 500px;
+  width: 300px;
   height: auto;
   cursor: pointer;
 }
