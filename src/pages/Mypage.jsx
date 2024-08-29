@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './Mypage.css';
+import mypagefooterimage from '../assets/footerimage.png';
+import mypageslogan from '../assets/newsslogan.png';
+import '../styles/Mypage.css';
 
 function Mypage() {
     const [currentDate] = useState(new Date());
@@ -10,14 +12,14 @@ function Mypage() {
     const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 에러 상태
-    const articlesPerPage = 5; // 한 페이지당 보여줄 기사 수
+    const articlesPerPage = 3; // 한 페이지당 보여줄 기사 수를 3개로 설정
 
     const fetchScrapedArticles = async () => {
         try {
             const token = localStorage.getItem('authToken');
-            const response = await axios.get('http://52.203.194.120/api/favorites', {
+            const response = await axios.get('http://52.203.194.120:8081/api/favorites', {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // 템플릿 리터럴을 사용하여 토큰 설정
                 },
                 params: {
                     page: currentPage - 1,
@@ -28,19 +30,15 @@ function Mypage() {
             const { data } = response;
             console.log('Fetched data:', data);
 
-            // 데이터 파싱
-            const articlesArray = data[1]; // 중첩된 배열에서 필요한 부분만 가져옴
-            const transformedArticles = articlesArray.map((item) => {
-                const articleData = item[1]; // 배열의 두 번째 요소가 실제 기사 데이터
-                return {
-                    id: articleData.newsId,
-                    imageUrl: articleData.imageUrl || 'https://example.com/default.jpg',
-                    publishedAt: articleData.publishedAt,
-                    summarizedContent: articleData.summarizedContent,
-                    title: articleData.title,
-                    viewCount: 0,
-                };
-            });
+            // 데이터 파싱 - 중첩 배열 대신 data가 이미 객체 배열임을 가정
+            const transformedArticles = data.map((articleData) => ({
+                id: articleData.newsId,
+                imageUrl: articleData.imgUrl || 'https://example.com/default.jpg',
+                publishedAt: articleData.publishedAt,
+                summarizedContent: articleData.summarizedContent,
+                title: articleData.title,
+                viewCount: articleData.viewCount || 0,
+            }));
 
             setScrapedArticles(transformedArticles);
             setTotalPages(Math.ceil(transformedArticles.length / articlesPerPage));
@@ -64,9 +62,8 @@ function Mypage() {
     const fullFormattedDate = currentDate.toLocaleDateString('ko-KR', options);
     const dayOfWeek = currentDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0);
     const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
-    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`;
+    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`; // 템플릿 리터럴 사용
 
-    const MaxTitleLength = 60;
     const MaxContentLength = 300;
 
     if (loading) {
@@ -83,25 +80,22 @@ function Mypage() {
                 <p className="date-text-1-1">{finalFormattedDate}</p>
             </div>
             <div className="date-container-2-1">
-                <h2 className="page-title-1">스크랩한 기사</h2> 
+                <h2 className="page-title-1">스크랩한 기사</h2>
+                <img src={mypageslogan} className="mypageslogan" alt="mypageslogan" />
             </div>
             <div className="articles-container-1-1">
                 <div className="all-articles-1-1">
                     {scrapedArticles.length > 0 ? (
                         scrapedArticles.map((article) => {
-                            const truncatedTitle = article.title.length > MaxTitleLength 
-                                ? article.title.slice(0, MaxTitleLength) + '...' 
-                                : article.title;
-
-                            const truncatedContent = article.summarizedContent.length > MaxContentLength 
-                                ? article.summarizedContent.slice(0, MaxContentLength) + '...' 
+                            const truncatedContent = article.summarizedContent && article.summarizedContent.length > MaxContentLength
+                                ? article.summarizedContent.slice(0, MaxContentLength) + '...'
                                 : article.summarizedContent;
 
                             return (
                                 <div key={article.id} className="all-article-1-1">
                                     <div className="all-article-content-1-1">
-                                        <Link to={`/article/${article.id}`}>   
-                                            <h3>{truncatedTitle}</h3>
+                                        <Link to={`/article/${article.id}`}> {/* 템플릿 리터럴 사용 */}
+                                            <h3>{article.title}</h3> {/* 제목을 전체 표시 */}
                                             <p>{truncatedContent}</p>
                                         </Link>
                                     </div>
@@ -110,7 +104,7 @@ function Mypage() {
                             );
                         })
                     ) : (
-                        <p>스크랩한 기사가 없습니다.</p>
+                        <p className="no-articles-message">스크랩한 기사가 없습니다.</p>
                     )}
                 </div>
             </div>
@@ -124,6 +118,28 @@ function Mypage() {
                         {index + 1}
                     </button>
                 ))}
+            </div>
+            <div className="mypagesidebar1">
+                <div className="mypagesidebar-box">
+                    <div className="mypagesidebar-top"></div>
+                    <div className="mypagesidebar-content">
+                        <Link to="/mypage" className="mypagesidebar-link">
+                            스크랩한 <br />기사 <br /> 보러가기
+                        </Link>
+                        <Link to="/Allarticlepage" className="mypagesidebar-link">
+                            전체기사 <br />보러가기
+                        </Link>
+                    </div>
+                    <div className="mypagesidebar-bottom"></div>
+                </div>
+            </div>
+            <div className="mypagefooter">
+                <img src={mypagefooterimage} className="mypagefooterimage" alt="Footer" />
+                <p>
+                    지구촌 소식 신문 등록·발행일자:2024년 8월 19일  
+                    주소:경남 창원시 의창구 창원대학로 20 (퇴촌동)
+                    © 지구촌 소식 신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지
+                </p>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import './SearchResults.css'; // 필요한 스타일 파일을 작성해주세요.
+import '../styles/SearchResults.css'; // 필요한 스타일 파일을 작성해주세요.
 
 function SearchResults() {
     const location = useLocation();
@@ -18,7 +18,7 @@ function SearchResults() {
 
     const indexOfLastArticle = currentPage * articlesPerPage;
     const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-    const currentArticles = results.slice(indexOfFirstArticle, indexOfLastArticle);
+    const currentArticles = results.slice(indexOfFirstArticle, indexOfFirstArticle + articlesPerPage);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -47,10 +47,13 @@ function SearchResults() {
                 {currentArticles.length > 0 ? (
                     <div className="search-articles">
                         {currentArticles.map((article, index) => {
+                            // article 객체와 그 속성이 있는지 확인
+                            if (!article) return null;
                             const maxContentLength = 300;
-                            const truncatedContent = article.summarizedContent && article.summarizedContent.length > maxContentLength
-                                ? article.summarizedContent.slice(0, maxContentLength) + '...'
-                                : article.summarizedContent;
+                            const content = article.summarizedContent || article.title || ''; // 안전한 기본값 사용
+                            const truncatedContent = content.length > maxContentLength
+                                ? content.slice(0, maxContentLength) + '...'
+                                : content;
 
                             return (
                                 <div key={index} className="search-article">

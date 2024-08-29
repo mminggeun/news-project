@@ -1,3 +1,5 @@
+// Home.jsx
+
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -6,53 +8,94 @@ import footerimage from '../assets/footerimage.png';
 import '../styles/Home.css';
 
 function Home() {
-    const { articlelist } = useContext(ArticleContext);
-    const navigate = useNavigate(); // useNavigate 훅 사용
+    const { articles, loading } = useContext(ArticleContext);
+    const navigate = useNavigate();
 
-    const specificDate = new Date('2024-08-20');
+    const specificDate = new Date('2024-08-27');
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredArticles, setFilteredArticles] = useState([]);
+    const [recentSearches, setRecentSearches] = useState([]); // 최근 검색어 저장
+    const [showRecentSearches, setShowRecentSearches] = useState(false); // 검색창 클릭 상태 저장
 
     useEffect(() => {
-        if (!articlelist || articlelist.length === 0) {
+        if (loading || !articles || !Array.isArray(articles)) {
             setFilteredArticles([]);
             return;
         }
 
         const parseDate = (dateString) => {
             if (!dateString) return new Date(NaN);
-
             const normalizedDateString = dateString.replace(/-/g, '');
             if (normalizedDateString.length !== 8) {
-                console.error('Invalid date string length:', dateString);
                 return new Date(NaN);
             }
-
             const year = parseInt(normalizedDateString.slice(0, 4), 10);
             const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
             const day = parseInt(normalizedDateString.slice(6, 8), 10);
-            const date = new Date(year, month, day);
-
-            return date;
+            return new Date(year, month, day);
         };
 
-        const filtered = articlelist
-            .filter(article => {
-                const articleDate = parseDate(article.publishedAt);
-
-                const isSameDay = (
-                    articleDate.getFullYear() === specificDate.getFullYear() &&
-                    articleDate.getMonth() === specificDate.getMonth() &&
-                    articleDate.getDate() === specificDate.getDate()
-                );
-
-                return isSameDay;
-            })
-            .sort((a, b) => articlelist.indexOf(a) - articlelist.indexOf(b))
-            .slice(0, 15);
+        const filtered = articles.filter(article => {
+            const articleDate = parseDate(article.publishedAt);
+            return articleDate.getFullYear() === specificDate.getFullYear() &&
+                articleDate.getMonth() === specificDate.getMonth() &&
+                articleDate.getDate() === specificDate.getDate();
+        }).slice(0, 15);
 
         setFilteredArticles(filtered);
-    }, [articlelist]);
+    }, [articles, loading]);
+
+    useEffect(() => {
+        const fetchRecentSearches = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('http://52.203.194.120:8081/api/search-history/recent', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setRecentSearches(response.data);
+            } catch (error) {
+                console.error('Error fetching recent searches:', error);
+            }
+        };
+
+        fetchRecentSearches();
+    }, []);
+
+    const handleSearch = async () => {
+        if (searchTerm.trim() !== '') {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get(`http://52.203.194.120:8081/api/search-history`, {
+                    params: { query: searchTerm },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const structuredResults = response.data;
+                navigate('/search', { state: { results: structuredResults } });
+            } catch (error) {
+                console.error('Error during search:', error);
+            }
+        }
+    };
+
+    const handleDeleteSearch = async (query) => {
+        try {
+            const token = localStorage.getItem('authToken');
+            await axios.delete(`http://52.203.194.120:8081/api/search-history`, {
+                params: { query },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setRecentSearches(recentSearches.filter(search => search.query !== query));
+        } catch (error) {
+            console.error('Error deleting search history:', error);
+        }
+    };
 
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const fullFormattedDate = specificDate.toLocaleDateString('ko-KR', options);
@@ -72,30 +115,7 @@ function Home() {
 
     const truncatedContentTop = topArticle.summarizedContent
         ? truncateText(topArticle.summarizedContent, MAX_CONTENT_LENGTH_TOP)
-        : '';
-
-    // 검색 기능 추가: 검색 결과 페이지로 리디렉션
-    const handleSearch = async () => {
-        if (searchTerm.trim() !== '') {
-            try {
-                const token = localStorage.getItem('authToken');
-                const response = await axios.get(`http://52.203.194.120/api/search-history`, {
-                    params: { query: searchTerm },
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                // 받은 데이터 구조화
-                const structuredResults = response.data[1].map(item => item[1]); // 중첩 배열에서 필요한 정보만 추출
-
-                console.log('Search Results:', structuredResults);
-                navigate('/search', { state: { results: structuredResults } }); // 검색 결과와 함께 /search 경로로 이동
-            } catch (error) {
-                console.error('Error during search:', error);
-            }
-        }
-    };
+        : topArticle.title;
 
     return (
         <div className="content-wrapper">
@@ -105,8 +125,21 @@ function Home() {
                     placeholder="Search articles..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onClick={() => setShowRecentSearches(true)} // 검색창 클릭 시 최근 검색어 표시
+                    onFocus={() => setShowRecentSearches(true)} // 포커스 시 최근 검색어 표시
+                    onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)} // 포커스 아웃 시 최근 검색어 숨김
                 />
                 <button onClick={handleSearch}>검색</button>
+                {showRecentSearches && recentSearches.length > 0 && (
+                    <div className="recent-searches-dropdown">
+                        {recentSearches.map((search, index) => (
+                            <div key={index} className="search-item">
+                                <span onClick={() => setSearchTerm(search.query)}>{search.query}</span>
+                                <button onClick={() => handleDeleteSearch(search.query)}>Delete</button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
             <div className="date-container">
                 <p className="date-text">{finalFormattedDate}</p>
@@ -126,7 +159,9 @@ function Home() {
                 {lastArticles.length > 0 && (
                     <div className="last-articles">
                         {lastArticles.map((article, index) => {
-                            const truncatedContentLast = truncateText(article.summarizedContent, MAX_CONTENT_LENGTH_LAST);
+                            const truncatedContentLast = article.summarizedContent
+                                ? truncateText(article.summarizedContent, MAX_CONTENT_LENGTH_LAST)
+                                : article.title;
 
                             return (
                                 <div key={index} className="last-article">

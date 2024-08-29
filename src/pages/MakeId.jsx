@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './MakeId.css';
+import '../styles/MakeId.css';
 import Logo1 from '../assets/newslogo-1.png';
 
 function MakeId() {
@@ -67,7 +67,7 @@ function MakeId() {
     }
 
     try {
-      // 회원가입 정보를 백엔드의 UserRequest DTO에 맞게 구성
+      // 회원가입 정보를 JSON 객체로 구성
       const UserRequest = {
         name,
         username,
@@ -76,8 +76,14 @@ function MakeId() {
         phoneNumber
       };
       console.log(UserRequest);
-      // 회원가입 정보를 서버에 전송
-      await axios.post('http://52.203.194.120/api/users/register', UserRequest);
+
+      // JSON 객체를 서버에 전송
+      await axios.post('http://52.203.194.120:8081/api/users/register', UserRequest, {
+        withCredentials: true, // 자격 증명 포함
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
 
       // 회원가입 성공 시 로그인 페이지로 이동
       alert('회원가입이 성공적으로 완료되었습니다. 이제 로그인하세요.');

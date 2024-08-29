@@ -279,7 +279,7 @@
 .sidebar1 {
   position: fixed;
   top: 26%;
-  right: 22px; /* 오른쪽에 배치, 왼쪽에 배치하려면 'left: 0;'으로 변경 */
+  right: 14px; /* 오른쪽에 배치, 왼쪽에 배치하려면 'left: 0;'으로 변경 */
   display: flex; 
   flex-direction: column;
   align-items: center;
@@ -369,4 +369,4 @@
   height: 1px; /* 줄의 두께 */
   width: 80%;
   background-color: #ccc; /* 줄의 색상 */
-}
+}  

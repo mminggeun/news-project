@@ -1,18 +1,20 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ArticleContext from '../pages/ArticleContext'; // ArticleContext 가져오기
-import './Allarticlepage.css';
+import allarticlefooterimage from '../assets/footerimage.png';
+import allarticleslogan from '../assets/newsslogan.png';
+import '../styles/Allarticlepage.css';
 
 function Allarticlepage() {
-    const { articlelist } = useContext(ArticleContext); // ArticleContext에서 articlelist 가져오기
+    const { articles } = useContext(ArticleContext); // ArticleContext에서 articlelist 가져오기
     const [currentPage, setCurrentPage] = useState(1);
     const articlesPerPage = 5;
     const [filteredArticles, setFilteredArticles] = useState([]);
 
-    const specificDate = new Date('2024-08-20'); // 원하는 날짜로 설정
+    const specificDate = new Date('2024-08-27'); // 원하는 날짜로 설정
 
     useEffect(() => {
-        if (!articlelist || articlelist.length === 0) {
+        if (!articles || articles.length === 0) {
             setFilteredArticles([]);
             return;
         }
@@ -32,7 +34,8 @@ function Allarticlepage() {
             return new Date(year, month, day);
         };
 
-        const filtered = articlelist
+        // 필터링 및 정렬 작업을 수행
+        const filtered = articles
             .filter(article => {
                 const articleDate = parseDate(article.publishedAt);
                 return (
@@ -41,10 +44,10 @@ function Allarticlepage() {
                     articleDate.getDate() === specificDate.getDate()
                 );
             })
-            .sort((a, b) => b.views - a.views);
+            .sort((a, b) => b.viewCount - a.viewCount); // views 필드명을 viewCount로 수정하여 일치
 
         setFilteredArticles(filtered);
-    }, [articlelist]);
+    }, [articles]);
 
     const totalArticles = filteredArticles.length;
     const totalPages = Math.ceil(totalArticles / articlesPerPage);
@@ -57,10 +60,12 @@ function Allarticlepage() {
     const fullFormattedDate = specificDate.toLocaleDateString('ko-KR', options);
     const dayOfWeek = specificDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0);
     const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
-    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`;
+    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`; // 템플릿 리터럴로 수정
 
     const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
+        if (pageNumber >= 1 && pageNumber <= totalPages) { // 페이지 번호 범위 체크
+            setCurrentPage(pageNumber);
+        }
     };
 
     // 페이지 번호를 계산하여 표시하는 함수
@@ -85,6 +90,7 @@ function Allarticlepage() {
             </div>
             <div className="artilclepage-title">
                 <h2 className="page-title">오늘자 전체 기사</h2>
+                <img src={allarticleslogan} className="allarticleslogan" alt="allarticleslogan" />
             </div>
             <div className="articlepage-container">
                 {currentArticles.length > 0 ? (
@@ -98,7 +104,7 @@ function Allarticlepage() {
                             return (
                                 <div key={index} className="all-article-1">
                                     <div className="all-article-content-1">
-                                        <Link to={`/article/${article.id}`}>
+                                        <Link to={`/article/${article.id}`}> {/* 템플릿 리터럴로 수정 */}
                                             <h3>{article.title}</h3>
                                             <p>{truncatedContent}</p>
                                         </Link>
@@ -116,6 +122,7 @@ function Allarticlepage() {
                 <button
                     className="arrow-button"
                     onClick={() => handlePageChange(Math.max(currentPage - 3, 1))}
+                    disabled={currentPage === 1} // 첫 페이지에서 이전 버튼 비활성화
                 >
                     ◀
                 </button>
@@ -131,9 +138,32 @@ function Allarticlepage() {
                 <button
                     className="arrow-button"
                     onClick={() => handlePageChange(Math.min(currentPage + 3, totalPages))}
+                    disabled={currentPage === totalPages} // 마지막 페이지에서 다음 버튼 비활성화
                 >
                     ▶
                 </button>
+            </div>
+            <div className="allarticlesidebar1">
+                <div className="allarticlesidebar-box">
+                    <div className="allarticlesidebar-top"></div>
+                    <div className="allarticlesidebar-content">
+                        <Link to="/mypage" className="allarticlesidebar-link">
+                            스크랩한 <br />기사 <br /> 보러가기
+                        </Link>
+                        <Link to="/Allarticlepage" className="allarticlesidebar-link">
+                            전체기사 <br />보러가기
+                        </Link>
+                    </div>
+                    <div className="allarticlesidebar-bottom"></div>
+                </div>
+            </div>
+            <div className="allarticlefooter">
+                <img src={allarticlefooterimage} className="allarticlefooterimage" alt="Footer" />
+                <p>
+                    지구촌 소식 신문 등록·발행일자:2024년 8월 19일  
+                    주소:경남 창원시 의창구 창원대학로 20 (퇴촌동)
+                    © 지구촌 소식 신문사 All Rights Reserved. 무단 전재, 재배포, AI 학습 및 활용 금지
+                </p>
             </div>
         </div>
     );

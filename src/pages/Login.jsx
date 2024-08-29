@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from './AuthContext'; // AuthContext 가져오기
-import './Login.css';
+import '../styles/Login.css';
 import Logo1 from '../assets/newslogo-1.png';
 
 function Login() {
@@ -15,7 +15,7 @@ function Login() {
         e.preventDefault();
     
         try {
-            const response = await axios.post('http://52.203.194.120/api/users/login', {
+            const response = await axios.post('http://52.203.194.120:8081/api/users/login', {
                 username,
                 password
             }, {
@@ -24,14 +24,9 @@ function Login() {
     
             console.log("Response Data:", response.data);  // 응답 데이터를 콘솔에 출력
     
-            // Authorization 헤더에서 액세스 토큰 가져오기
-            let accessToken = response.headers["authorization"] || response.headers["Authorization"];
+            // 응답 데이터에서 accessToken 가져오기
+            let accessToken = response.data.accessToken;
             console.log("Received access token:", accessToken);
-    
-            // 'Bearer ' 접두사 제거
-            if (accessToken && accessToken.startsWith('Bearer ')) {
-                accessToken = accessToken.slice(7);
-            }
     
             if (accessToken) {
                 const { name } = response.data;  // 서버 응답에서 name 필드만 추출
@@ -40,7 +35,7 @@ function Login() {
                 localStorage.setItem('authToken', accessToken);
                 navigate('/'); // 홈 화면으로 이동
             } else {
-                console.error('Token not found in the response');
+                console.error('Access token not found in the response');
                 alert('로그인 실패: 토큰을 받아올 수 없습니다.');
             }
         } catch (error) {
