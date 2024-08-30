@@ -63,6 +63,47 @@
   transition: background-color 0.3s;
   }
   
+  .recent-searches-dropdown {
+    position: absolute;
+    top: 40px; /* 검색창 바로 아래에 위치 */
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 200px; /* 최대 높이 설정 */
+    overflow-y: auto; /* 스크롤 가능 */
+    z-index: 1000; /* 다른 요소들보다 앞에 위치 */
+}
+
+.recent-searches-dropdown::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.recent-searches-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 배경색 */
+}
+
+.recent-searches-dropdown::-webkit-scrollbar-thumb {
+  background-color: #c1c6ce; /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 둥글게 */
+}
+
+.recent-searches-dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: #d8d7d7fb; /* 스크롤바에 마우스를 올렸을 때 색상 */
+}
+
+.search-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.search-item span {
+    cursor: pointer;
+}
   .articles-container {
   display: flex;
   margin-left: 5px;
@@ -246,7 +287,7 @@
       content: ''; 
       position: absolute; 
       left: -17px; 
-      top: 240px; 
+      top: 280px; 
       height: 0.5px; 
       background-color: black; 
       width: 265%; 
@@ -303,6 +344,7 @@
   align-items: center; /* 세로 중앙 정렬 */
   padding: 10px; /* 여백 조정 (선택 사항) */
   gap: 100px;
+  margin-top:30px;
 }
 
 .footer p {

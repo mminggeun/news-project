@@ -85,16 +85,17 @@ body {
 
 
 .namelink {
-  margin-right:30px;
-  margin-left: -22px;
+  margin-right:50px;
+  margin-left: 32px;
   font-size: 14px;
   color: #fff;  /* 글자 색상을 흰색으로 */
   text-decoration: none;  /* 밑줄 없애기 */
 }
 
 .logoutlink {
-  margin-right:-10px;
-  margin-left: -13px;
+  margin-top:-1px;
+  margin-right:-50px;
+  margin-left: -35px;
   font-size: 14px;
   color: #fff;  /* 글자 색상을 흰색으로 */
   text-decoration: none;  /* 밑줄 없애기 */

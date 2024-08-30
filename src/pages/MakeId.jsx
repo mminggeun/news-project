@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useMutation } from 'react-query';
 import '../styles/MakeId.css';
 import Logo1 from '../assets/newslogo-1.png';
 
@@ -21,7 +22,35 @@ function MakeId() {
     navigate('/');
   };
 
-  const handleSubmit = async (e) => {
+  // 회원가입 mutation 정의
+  const registerMutation = useMutation(
+    async (userData) => {
+      const response = await axios.post('http://52.203.194.120:8081/api/users/register', userData, {
+        withCredentials: true, // 자격 증명 포함
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        alert('회원가입이 성공적으로 완료되었습니다. 이제 로그인하세요.');
+        navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
+      },
+      onError: (error) => {
+        if (error.response) {
+          console.error('Error response:', error.response.data);
+          alert('회원가입 실패: ' + error.response.data.message);
+        } else {
+          console.error('Error registering user:', error);
+          alert('회원가입 실패: 서버와의 연결이 원활하지 않습니다.');
+        }
+      },
+    }
+  );
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     // 아이디 유효성 검사
@@ -66,37 +95,18 @@ function MakeId() {
       setPhoneError(false);
     }
 
-    try {
-      // 회원가입 정보를 JSON 객체로 구성
-      const UserRequest = {
-        name,
-        username,
-        password,
-        email,
-        phoneNumber
-      };
-      console.log(UserRequest);
+    // 회원가입 정보 객체
+    const UserRequest = {
+      name,
+      username,
+      password,
+      email,
+      phoneNumber,
+    };
+    console.log(UserRequest);
 
-      // JSON 객체를 서버에 전송
-      await axios.post('http://52.203.194.120:8081/api/users/register', UserRequest, {
-        withCredentials: true, // 자격 증명 포함
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      // 회원가입 성공 시 로그인 페이지로 이동
-      alert('회원가입이 성공적으로 완료되었습니다. 이제 로그인하세요.');
-      navigate('/login');
-    } catch (error) {
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-        alert('회원가입 실패: ' + error.response.data.message);
-      } else {
-        console.error('Error registering user:', error);
-        alert('회원가입 실패: 서버와의 연결이 원활하지 않습니다.');
-      }
-    }
+    // 회원가입 mutation 호출
+    registerMutation.mutate(UserRequest);
   };
 
   return (

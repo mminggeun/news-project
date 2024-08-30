@@ -48,7 +48,7 @@
   color:black;
   font-size:33px;
   font-weight:1200;
-  margin-left:400px;
+  margin-left:365px;
   margin-top:-330px;
   width: 100%;
 }
@@ -135,12 +135,15 @@
   }
 
   .no-articles-message {
+    display: block; /* 가로로 나타나도록 설정 */
     text-align: center; /* 가운데 정렬 */
-    margin-top: -250px;
-    margin-right: 330px;
-    font-size: 18px;    /* 글자 크기 */
+    margin-top: 50px;
+    margin-left: 10px;
+    margin-right: 280px;
+    font-size: 28px;    /* 글자 크기 */
     color: #555;        /* 글자 색상 */
-}
+    white-space: nowrap; /* 텍스트를 한 줄로 표시하도록 설정 */
+  }
 
 .mypagefooter {
   display: grid; /* Grid 활성화 */
@@ -148,16 +151,30 @@
   align-items: center; /* 세로 중앙 정렬 */
   padding: 10px; /* 여백 조정 (선택 사항) */
   gap: 50px;
-  margin-top:220px;
-  border-top: 1px solid black;
+  margin-top: 130px;
+  margin-bottom: -30px;
+  width: 85%;
+  position: relative; /* ::before 요소의 위치를 상대적으로 설정 */
 }
+
+.mypagefooter::before {
+  content: ''; /* 가상 요소의 내용 설정 */
+  position: absolute; /* 절대 위치 설정 */
+  top: 180px; /* border-top을 아래로 내리기 위한 위치 조정 */
+  left: 0;
+  right: 0;
+  height: 1px; /* 경계선의 두께 */
+  background-color: black; /* 경계선 색상 */
+  width: 100%; /* 경계선 너비를 footer 너비에 맞춤 */
+}
+
 
 .mypagefooter p {
   color: rgb(142, 138, 138);
-  margin-right:150px;
+  margin-right:100px;
   line-height: 2.5; 
   font-size:13px;
-  margin-top:130px;
+  margin-top:200px;
 }
 
 .mypagefooterimage {

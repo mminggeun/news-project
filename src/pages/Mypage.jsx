@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import axios from 'axios';
 import mypagefooterimage from '../assets/footerimage.png';
 import mypageslogan from '../assets/newsslogan.png';
@@ -8,51 +9,35 @@ import '../styles/Mypage.css';
 function Mypage() {
     const [currentDate] = useState(new Date());
     const [currentPage, setCurrentPage] = useState(1);
-    const [scrapedArticles, setScrapedArticles] = useState([]); // 서버에서 가져올 스크랩 기사들
-    const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-    const [loading, setLoading] = useState(true); // 로딩 상태
-    const [error, setError] = useState(null); // 에러 상태
     const articlesPerPage = 3; // 한 페이지당 보여줄 기사 수를 3개로 설정
 
-    const fetchScrapedArticles = async () => {
-        try {
-            const token = localStorage.getItem('authToken');
-            const response = await axios.get('http://52.203.194.120:8081/api/favorites', {
-                headers: {
-                    Authorization: `Bearer ${token}`, // 템플릿 리터럴을 사용하여 토큰 설정
-                },
-                params: {
-                    page: currentPage - 1,
-                    size: articlesPerPage,
-                },
-            });
+    // React Query를 사용하여 스크랩된 기사 가져오기
+    const { data: scrapedArticles = [], isLoading, isError, error } = useQuery('scrapedArticles', async () => {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://52.203.194.120:8081/api/favorites', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            params: {
+                size: 100, // 임의의 큰 값으로 설정하여 모든 기사를 가져옴
+            },
+        });
+        return response.data.map(articleData => ({
+            id: articleData.newsId,
+            imageUrl: articleData.imgUrl || 'https://example.com/default.jpg',
+            publishedAt: articleData.publishedAt,
+            summarizedContent: articleData.summarizedContent,
+            title: articleData.title,
+            viewCount: articleData.viewCount || 0,
+        }));
+    });
 
-            const { data } = response;
-            console.log('Fetched data:', data);
+    // 현재 페이지에 따라 표시할 기사 계산
+    const indexOfLastArticle = currentPage * articlesPerPage;
+    const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+    const currentArticles = scrapedArticles.slice(indexOfFirstArticle, indexOfLastArticle);
 
-            // 데이터 파싱 - 중첩 배열 대신 data가 이미 객체 배열임을 가정
-            const transformedArticles = data.map((articleData) => ({
-                id: articleData.newsId,
-                imageUrl: articleData.imgUrl || 'https://example.com/default.jpg',
-                publishedAt: articleData.publishedAt,
-                summarizedContent: articleData.summarizedContent,
-                title: articleData.title,
-                viewCount: articleData.viewCount || 0,
-            }));
-
-            setScrapedArticles(transformedArticles);
-            setTotalPages(Math.ceil(transformedArticles.length / articlesPerPage));
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching scraped articles:', error);
-            setError('스크랩된 기사를 불러오는데 실패했습니다.');
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchScrapedArticles();
-    }, [currentPage]);
+    const totalPages = Math.ceil(scrapedArticles.length / articlesPerPage); // 총 페이지 수 계산
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -66,12 +51,12 @@ function Mypage() {
 
     const MaxContentLength = 300;
 
-    if (loading) {
+    if (isLoading) {
         return <div>Loading...</div>;
     }
 
-    if (error) {
-        return <div>{error}</div>;
+    if (isError) {
+        return <div>{error.message || '스크랩된 기사를 불러오는데 실패했습니다.'}</div>;
     }
 
     return (
@@ -80,13 +65,13 @@ function Mypage() {
                 <p className="date-text-1-1">{finalFormattedDate}</p>
             </div>
             <div className="date-container-2-1">
-                <h2 className="page-title-1">스크랩한 기사</h2>
+                <h2 className="page-title-1">스크랩한 기사 ({scrapedArticles.length}개)</h2>
                 <img src={mypageslogan} className="mypageslogan" alt="mypageslogan" />
             </div>
             <div className="articles-container-1-1">
                 <div className="all-articles-1-1">
-                    {scrapedArticles.length > 0 ? (
-                        scrapedArticles.map((article) => {
+                    {currentArticles.length > 0 ? (
+                        currentArticles.map((article) => {
                             const truncatedContent = article.summarizedContent && article.summarizedContent.length > MaxContentLength
                                 ? article.summarizedContent.slice(0, MaxContentLength) + '...'
                                 : article.summarizedContent;

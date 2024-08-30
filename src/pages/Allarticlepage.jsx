@@ -1,53 +1,56 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ArticleContext from '../pages/ArticleContext'; // ArticleContext 가져오기
+import { useQuery } from 'react-query';
+import axios from 'axios';
 import allarticlefooterimage from '../assets/footerimage.png';
 import allarticleslogan from '../assets/newsslogan.png';
 import '../styles/Allarticlepage.css';
 
 function Allarticlepage() {
-    const { articles } = useContext(ArticleContext); // ArticleContext에서 articlelist 가져오기
     const [currentPage, setCurrentPage] = useState(1);
     const articlesPerPage = 5;
-    const [filteredArticles, setFilteredArticles] = useState([]);
-
     const specificDate = new Date('2024-08-27'); // 원하는 날짜로 설정
 
-    useEffect(() => {
-        if (!articles || articles.length === 0) {
-            setFilteredArticles([]);
-            return;
+    // react-query를 사용하여 기사를 가져오는 쿼리
+    const { data: articles, isLoading, error } = useQuery('articles', async () => {
+        const response = await axios.get('http://52.203.194.120:8081/api/news?page=0&size=15');
+        return response.data;
+    });
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    const parseDate = (dateString) => {
+        if (!dateString) return new Date(NaN); // dateString이 존재하지 않을 경우 Invalid Date 반환
+
+        const normalizedDateString = dateString.replace(/-/g, '');
+        if (normalizedDateString.length !== 8) {
+            console.error('Invalid date string length:', dateString);
+            return new Date(NaN);
         }
 
-        const parseDate = (dateString) => {
-            if (!dateString) return new Date(NaN); // dateString이 존재하지 않을 경우 Invalid Date 반환
+        const year = parseInt(normalizedDateString.slice(0, 4), 10);
+        const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
+        const day = parseInt(normalizedDateString.slice(6, 8), 10);
+        return new Date(year, month, day);
+    };
 
-            const normalizedDateString = dateString.replace(/-/g, '');
-            if (normalizedDateString.length !== 8) {
-                console.error('Invalid date string length:', dateString);
-                return new Date(NaN);
-            }
-
-            const year = parseInt(normalizedDateString.slice(0, 4), 10);
-            const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
-            const day = parseInt(normalizedDateString.slice(6, 8), 10);
-            return new Date(year, month, day);
-        };
-
-        // 필터링 및 정렬 작업을 수행
-        const filtered = articles
-            .filter(article => {
-                const articleDate = parseDate(article.publishedAt);
-                return (
-                    articleDate.getFullYear() === specificDate.getFullYear() &&
-                    articleDate.getMonth() === specificDate.getMonth() &&
-                    articleDate.getDate() === specificDate.getDate()
-                );
-            })
-            .sort((a, b) => b.viewCount - a.viewCount); // views 필드명을 viewCount로 수정하여 일치
-
-        setFilteredArticles(filtered);
-    }, [articles]);
+    // 필터링 및 정렬 작업을 수행
+    const filteredArticles = articles
+        .filter(article => {
+            const articleDate = parseDate(article.publishedAt);
+            return (
+                articleDate.getFullYear() === specificDate.getFullYear() &&
+                articleDate.getMonth() === specificDate.getMonth() &&
+                articleDate.getDate() === specificDate.getDate()
+            );
+        })
+        .sort((a, b) => b.viewCount - a.viewCount); // views 필드명을 viewCount로 수정하여 일치
 
     const totalArticles = filteredArticles.length;
     const totalPages = Math.ceil(totalArticles / articlesPerPage);
@@ -67,21 +70,6 @@ function Allarticlepage() {
             setCurrentPage(pageNumber);
         }
     };
-
-    // 페이지 번호를 계산하여 표시하는 함수
-    const getVisiblePages = () => {
-        const visiblePages = [];
-        const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
-        for (let i = 0; i < 3; i++) {
-            const page = startPage + i;
-            if (page <= totalPages) {
-                visiblePages.push(page);
-            }
-        }
-        return visiblePages;
-    };
-
-    const visiblePages = getVisiblePages();
 
     return (
         <div className="all-artilclepage">
@@ -119,29 +107,15 @@ function Allarticlepage() {
                 )}
             </div>
             <div className="page-button">
-                <button
-                    className="arrow-button"
-                    onClick={() => handlePageChange(Math.max(currentPage - 3, 1))}
-                    disabled={currentPage === 1} // 첫 페이지에서 이전 버튼 비활성화
-                >
-                    ◀
-                </button>
-                {visiblePages.map(page => (
+                {Array.from({ length: totalPages }, (_, index) => (
                     <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={currentPage === page ? 'active' : ''}
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={currentPage === index + 1 ? 'active' : ''}
                     >
-                        {page}
+                        {index + 1}
                     </button>
                 ))}
-                <button
-                    className="arrow-button"
-                    onClick={() => handlePageChange(Math.min(currentPage + 3, totalPages))}
-                    disabled={currentPage === totalPages} // 마지막 페이지에서 다음 버튼 비활성화
-                >
-                    ▶
-                </button>
             </div>
             <div className="allarticlesidebar1">
                 <div className="allarticlesidebar-box">
