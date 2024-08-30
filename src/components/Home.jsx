@@ -1,77 +1,48 @@
-// Home.jsx
-
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from 'react-query';
 import axios from 'axios';
-import ArticleContext from '../pages/ArticleContext';
 import footerimage from '../assets/footerimage.png';
 import '../styles/Home.css';
 
 function Home() {
-    const { articles, loading } = useContext(ArticleContext);
     const navigate = useNavigate();
-
+    const queryClient = useQueryClient(); // QueryClient 사용하기 위한 hook
     const specificDate = new Date('2024-08-27');
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredArticles, setFilteredArticles] = useState([]);
-    const [recentSearches, setRecentSearches] = useState([]); // 최근 검색어 저장
-    const [showRecentSearches, setShowRecentSearches] = useState(false); // 검색창 클릭 상태 저장
+    const [showRecentSearches, setShowRecentSearches] = useState(false);
 
-    useEffect(() => {
-        if (loading || !articles || !Array.isArray(articles)) {
-            setFilteredArticles([]);
-            return;
-        }
+    // Fetch articles using React Query
+    const { data: articles = [], isLoading: loading } = useQuery('articles', async () => {
+        const response = await axios.get('http://52.203.194.120:8081/api/news?page=0&size=15');
+        return response.data;
+    });
 
-        const parseDate = (dateString) => {
-            if (!dateString) return new Date(NaN);
-            const normalizedDateString = dateString.replace(/-/g, '');
-            if (normalizedDateString.length !== 8) {
-                return new Date(NaN);
-            }
-            const year = parseInt(normalizedDateString.slice(0, 4), 10);
-            const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
-            const day = parseInt(normalizedDateString.slice(6, 8), 10);
-            return new Date(year, month, day);
-        };
+    const filteredArticles = articles.filter(article => {
+        const articleDate = new Date(article.publishedAt);
+        return (
+            articleDate.getFullYear() === specificDate.getFullYear() &&
+            articleDate.getMonth() === specificDate.getMonth() &&
+            articleDate.getDate() === specificDate.getDate()
+        );
+    }).slice(0, 15);
 
-        const filtered = articles.filter(article => {
-            const articleDate = parseDate(article.publishedAt);
-            return articleDate.getFullYear() === specificDate.getFullYear() &&
-                articleDate.getMonth() === specificDate.getMonth() &&
-                articleDate.getDate() === specificDate.getDate();
-        }).slice(0, 15);
-
-        setFilteredArticles(filtered);
-    }, [articles, loading]);
-
-    useEffect(() => {
-        const fetchRecentSearches = async () => {
-            try {
-                const token = localStorage.getItem('authToken');
-                const response = await axios.get('http://52.203.194.120:8081/api/search-history/recent', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setRecentSearches(response.data);
-            } catch (error) {
-                console.error('Error fetching recent searches:', error);
-            }
-        };
-
-        fetchRecentSearches();
-    }, []);
+    // Fetch recent searches using React Query
+    const { data: recentSearches = [] } = useQuery('recentSearches', async () => {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.get('http://52.203.194.120:8081/api/search-history/recent', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    });
 
     const handleSearch = async () => {
         if (searchTerm.trim() !== '') {
             try {
                 const token = localStorage.getItem('authToken');
-                const response = await axios.get(`http://52.203.194.120:8081/api/search-history`, {
+                const response = await axios.get('http://52.203.194.120:8081/api/search-history', {
                     params: { query: searchTerm },
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
                 const structuredResults = response.data;
                 navigate('/search', { state: { results: structuredResults } });
@@ -84,14 +55,14 @@ function Home() {
     const handleDeleteSearch = async (query) => {
         try {
             const token = localStorage.getItem('authToken');
-            await axios.delete(`http://52.203.194.120:8081/api/search-history`, {
+            await axios.delete('http://52.203.194.120:8081/api/search-history', {
                 params: { query },
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
 
-            setRecentSearches(recentSearches.filter(search => search.query !== query));
+            // Update local state after deletion
+            const updatedSearches = recentSearches.filter(search => search.query !== query);
+            queryClient.setQueryData('recentSearches', updatedSearches);
         } catch (error) {
             console.error('Error deleting search history:', error);
         }
@@ -125,9 +96,9 @@ function Home() {
                     placeholder="Search articles..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    onClick={() => setShowRecentSearches(true)} // 검색창 클릭 시 최근 검색어 표시
-                    onFocus={() => setShowRecentSearches(true)} // 포커스 시 최근 검색어 표시
-                    onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)} // 포커스 아웃 시 최근 검색어 숨김
+                    onClick={() => setShowRecentSearches(true)}
+                    onFocus={() => setShowRecentSearches(true)}
+                    onBlur={() => setTimeout(() => setShowRecentSearches(false), 200)}
                 />
                 <button onClick={handleSearch}>검색</button>
                 {showRecentSearches && recentSearches.length > 0 && (
