@@ -6,12 +6,12 @@ import axios from 'axios';
 import '../styles/Article.css';
 
 function Article() {
-    const { id } = useParams(); // URL에서 기사 ID를 가져옴
+    const { id } = useParams(); 
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [scrapMessage, setScrapMessage] = useState('');
 
-    // React Query: 기사를 가져오는 쿼리
+    // 개별기사 가져옴
     const { data: article, isLoading, error } = useQuery(['article', id], async () => {
         const token = localStorage.getItem('authToken');
         const response = await axios.get(`http://52.203.194.120:8081/api/news/${id}`, {
@@ -22,7 +22,7 @@ function Article() {
         return response.data;
     });
 
-    // React Query: 스크랩 상태 확인 및 관리하는 쿼리
+    // 스크랩 상태 확인 및 관리
     const { data: isScrapped } = useQuery(['isScrapped', id], async () => {
         const token = localStorage.getItem('authToken');
         const response = await axios.get('http://52.203.194.120:8081/api/favorites', {
@@ -34,7 +34,7 @@ function Article() {
         return favoritesData.some(fav => fav.newsId === parseInt(id));
     });
 
-    // 스크랩 추가/삭제를 관리하는 Mutation
+    // 스크랩 추가/삭제 관리 
     const { mutate: scrapArticle } = useMutation(
         async () => {
             const token = localStorage.getItem('authToken');
@@ -47,7 +47,7 @@ function Article() {
         {
             onSuccess: () => {
                 setScrapMessage('기사가 성공적으로 저장되었습니다!');
-                queryClient.invalidateQueries(['isScrapped', id]); // 스크랩 상태 쿼리 무효화
+                queryClient.invalidateQueries(['isScrapped', id]); 
             },
             onError: () => {
                 setScrapMessage('기사를 저장하는 데 실패했습니다.');
@@ -67,7 +67,7 @@ function Article() {
         {
             onSuccess: () => {
                 setScrapMessage('기사가 성공적으로 저장 취소되었습니다!');
-                queryClient.invalidateQueries(['isScrapped', id]); // 스크랩 상태 쿼리 무효화
+                queryClient.invalidateQueries(['isScrapped', id]); 
             },
             onError: () => {
                 setScrapMessage('기사를 저장 취소하는 데 실패했습니다.');

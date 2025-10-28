@@ -7,11 +7,11 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: -650px; /* 기존 margin 값 유지 */
-  margin-left: 65px; /* 기존 margin 값 유지 */
-  position: sticky; /* sticky로 변경 */
-  top: -150px; /* 스크롤 시 고정될 위치 설정 (margin-top과 일치) */
-  z-index: 10; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+  margin-top: -650px; 
+  margin-left: 65px; 
+  position: sticky; 
+  top: -150px; 
+  z-index: 10;
 }
 
 .header1 {
@@ -31,8 +31,8 @@ body {
 }
 
 .logo2 {
-  width: 220px; /* 기존 너비 */
-  height: auto; /* 비율을 유지하며 높이를 자동 조절 */
+  width: 220px; 
+  height: auto; 
   margin-top: -1px;
   position: relative; 
   z-index: 3;
@@ -60,13 +60,13 @@ body {
   margin-left: 53px;
   margin-top:-5px;
   font-size: 14px;
-  color: #fff;  /* 글자 색상을 흰색으로 */
-  text-decoration: none;  /* 밑줄 없애기 */
+  color: #fff;  
+  text-decoration: none;  
 }
 
 .authLink1:hover {
-  text-decoration: underline;  /* 마우스 오버 시 밑줄 추가 (원하는 경우) */
-  color: #fff; /* 마우스 오버 시 약간 밝은 색상으로 변경 (선택사항) */
+  text-decoration: underline;  
+  color: #fff; 
 }
 
 .authLink2 {
@@ -74,22 +74,22 @@ body {
   margin-left: 53px;
   margin-top:-5px;
   font-size: 14px;
-  color: #fff;  /* 글자 색상을 흰색으로 */
-  text-decoration: none;  /* 밑줄 없애기 */
+  color: #fff; 
+  text-decoration: none;  
 }
 
 .authLink2:hover {
-  text-decoration: underline;  /* 마우스 오버 시 밑줄 추가 (원하는 경우) */
-  color: #fff; /* 마우스 오버 시 약간 밝은 색상으로 변경 (선택사항) */
+  text-decoration: underline;  
+  color: #fff; 
 }
 
 
 .namelink {
   margin-right:50px;
-  margin-left: 32px;
+  margin-left: -13px;
   font-size: 14px;
-  color: #fff;  /* 글자 색상을 흰색으로 */
-  text-decoration: none;  /* 밑줄 없애기 */
+  color: #fff;  
+  text-decoration: none;  
 }
 
 .logoutlink {
@@ -97,11 +97,11 @@ body {
   margin-right:-50px;
   margin-left: -35px;
   font-size: 14px;
-  color: #fff;  /* 글자 색상을 흰색으로 */
-  text-decoration: none;  /* 밑줄 없애기 */
+  color: #fff;  
+  text-decoration: none;  
 }
 
 .logoutlink:hover {
-  text-decoration: underline;  /* 마우스 오버 시 밑줄 추가 (원하는 경우) */
-  color: #fff; /* 마우스 오버 시 약간 밝은 색상으로 변경 (선택사항) */
+  text-decoration: underline;  
+  color: #fff; 
 }

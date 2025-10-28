@@ -9,9 +9,11 @@ import '../styles/Allarticlepage.css';
 function Allarticlepage() {
     const [currentPage, setCurrentPage] = useState(1);
     const articlesPerPage = 5;
-    const specificDate = new Date('2024-08-27'); // 원하는 날짜로 설정
 
-    // react-query를 사용하여 기사를 가져오는 쿼리
+    const today = new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'long' };
+    const formattedDate = today.toLocaleDateString('ko-KR', options);
+
     const { data: articles, isLoading, error } = useQuery('articles', async () => {
         const response = await axios.get('http://52.203.194.120:8081/api/news?page=0&size=15');
         return response.data;
@@ -25,48 +27,14 @@ function Allarticlepage() {
         return <div>Error: {error.message}</div>;
     }
 
-    const parseDate = (dateString) => {
-        if (!dateString) return new Date(NaN); // dateString이 존재하지 않을 경우 Invalid Date 반환
-
-        const normalizedDateString = dateString.replace(/-/g, '');
-        if (normalizedDateString.length !== 8) {
-            console.error('Invalid date string length:', dateString);
-            return new Date(NaN);
-        }
-
-        const year = parseInt(normalizedDateString.slice(0, 4), 10);
-        const month = parseInt(normalizedDateString.slice(4, 6), 10) - 1;
-        const day = parseInt(normalizedDateString.slice(6, 8), 10);
-        return new Date(year, month, day);
-    };
-
-    // 필터링 및 정렬 작업을 수행
-    const filteredArticles = articles
-        .filter(article => {
-            const articleDate = parseDate(article.publishedAt);
-            return (
-                articleDate.getFullYear() === specificDate.getFullYear() &&
-                articleDate.getMonth() === specificDate.getMonth() &&
-                articleDate.getDate() === specificDate.getDate()
-            );
-        })
-        .sort((a, b) => b.viewCount - a.viewCount); // views 필드명을 viewCount로 수정하여 일치
-
-    const totalArticles = filteredArticles.length;
+    const totalArticles = articles.length;
     const totalPages = Math.ceil(totalArticles / articlesPerPage);
-
     const indexOfLastArticle = currentPage * articlesPerPage;
     const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-    const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
-
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const fullFormattedDate = specificDate.toLocaleDateString('ko-KR', options);
-    const dayOfWeek = specificDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0);
-    const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
-    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`; // 템플릿 리터럴로 수정
+    const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
 
     const handlePageChange = (pageNumber) => {
-        if (pageNumber >= 1 && pageNumber <= totalPages) { // 페이지 번호 범위 체크
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
             setCurrentPage(pageNumber);
         }
     };
@@ -74,10 +42,10 @@ function Allarticlepage() {
     return (
         <div className="all-artilclepage">
             <div className="artilclepage-date">
-                <p className="date-text-1">{finalFormattedDate}</p>
+                <p className="date-text-1">{formattedDate}</p> 
             </div>
             <div className="artilclepage-title">
-                <h2 className="page-title">오늘자 전체 기사</h2>
+                <h2 className="page-title">전체 기사</h2>
                 <img src={allarticleslogan} className="allarticleslogan" alt="allarticleslogan" />
             </div>
             <div className="articlepage-container">
@@ -92,7 +60,7 @@ function Allarticlepage() {
                             return (
                                 <div key={index} className="all-article-1">
                                     <div className="all-article-content-1">
-                                        <Link to={`/article/${article.id}`}> {/* 템플릿 리터럴로 수정 */}
+                                        <Link to={`/article/${article.id}`}>
                                             <h3>{article.title}</h3>
                                             <p>{truncatedContent}</p>
                                         </Link>
@@ -103,7 +71,7 @@ function Allarticlepage() {
                         })}
                     </div>
                 ) : (
-                    <p>해당 날짜에 기사가 없습니다.</p>
+                    <p>기사가 없습니다.</p>
                 )}
             </div>
             <div className="page-button">

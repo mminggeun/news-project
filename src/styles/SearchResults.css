@@ -1,20 +1,20 @@
 .search-results-page {
     min-height: 600px;
-    max-height: 1320px; /* 더 높은 최대 높이 설정 */
+    max-height: 1320px; 
     font-family: '맑은 고딕', serif;
     justify-content: center;
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: auto; /* 동적 컨텐츠를 수용하기 위해 높이를 auto로 설정 */
-    background-color: rgba(255, 255, 255, 0.715); /* 반투명 배경색 */
+    height: auto; 
+    background-color: rgba(255, 255, 255, 0.715); 
     margin: 0 auto;
-    margin-top: 550px; /* 상단 여백 증가 */
-    margin-bottom: 70px; /* 하단 여백 추가 */
-    width: 90%; /* 너비를 60%로 설정하여 반응형 지원 */
+    margin-top: 550px; 
+    margin-bottom: 70px; 
+    width: 90%; 
     position: relative;
-    padding: 60px; /* 내부 패딩 추가 */
-    box-shadow: 8px 8px 8px 16px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    padding: 60px; 
+    box-shadow: 8px 8px 8px 16px rgba(0, 0, 0, 0.1); 
 }
 
 .search-results-title {
@@ -50,19 +50,19 @@
 
 .no-results {
   color: #555;
-  font-size: 44px; /* 적절한 크기로 조정 */
-  font-weight: 500; /* 폰트 두께를 적절히 조정 */
-  text-align: center; /* 텍스트를 가로로 중앙 정렬 */
-  margin: 20px auto; /* 상하 여백을 적절히 주고 중앙에 배치 */
+  font-size: 44px; 
+  font-weight: 500; 
+  text-align: center; 
+  margin: 20px auto; 
   margin-top: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 세로 중앙 정렬 */
-  align-items: center; /* 가로 중앙 정렬 */
-  height: 30vh; /* 페이지에서 일정 비율을 차지하도록 */
+  justify-content: center; 
+  align-items: center; 
+  height: 30vh; 
   margin-bottom: -310px;
-  transform: translateX(50px); /* 텍스트를 오른쪽으로 20px 이동 */
+  transform: translateX(50px); 
 }
 
 
@@ -133,26 +133,26 @@
     }
 
     .searchfooter {
-        display: grid; /* Grid 활성화 */
-        grid-template-columns: auto 1fr; /* 두 개의 열을 생성 (이미지, 텍스트) */
-        align-items: center; /* 세로 중앙 정렬 */
-        padding: 10px; /* 여백 조정 (선택 사항) */
+        display: grid; 
+        grid-template-columns: auto 1fr; 
+        align-items: center; 
+        padding: 10px; 
         gap: 50px;
         margin-top: 130px;
         margin-bottom: -30px;
         width: 85%;
-        position: relative; /* ::before 요소의 위치를 상대적으로 설정 */
+        position: relative; 
       }
     
     .searchfooter::before {
-        content: ''; /* 가상 요소의 내용 설정 */
-        position: absolute; /* 절대 위치 설정 */
-        top: 180px; /* border-top을 아래로 내리기 위한 위치 조정 */
+        content: ''; 
+        position: absolute; 
+        top: 180px; 
         left: 0;
         right: 0;
-        height: 1px; /* 경계선의 두께 */
-        background-color: black; /* 경계선 색상 */
-        width: 100%; /* 경계선 너비를 footer 너비에 맞춤 */
+        height: 1px; 
+        background-color: black; 
+        width: 100%; 
       }
       
       

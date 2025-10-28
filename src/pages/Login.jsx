@@ -2,40 +2,43 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useMutation } from 'react-query';
-import { AuthContext } from './AuthContext'; // AuthContext 가져오기
+import { AuthContext } from './AuthContext'; 
 import '../styles/Login.css';
 import Logo1 from '../assets/newslogo-1.png';
 
 function Login() {
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext); // login 함수 가져오기
+    const { login } = useContext(AuthContext); 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // 로그인 mutation 정의
     const loginMutation = useMutation(
         async ({ username, password }) => {
-            const response = await axios.post('http://52.203.194.120:8081/api/users/login', {
-                username,
-                password
-            }, {
-                withCredentials: true  // 자격 증명 포함
-            });
-            return response.data;
+            const response = await axios.post(
+                'http://52.203.194.120:8081/api/users/login',
+                { username, password },
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            return response;
         },
         {
-            onSuccess: (data) => {
-                console.log("Response Data:", data);  // 응답 데이터를 콘솔에 출력
-    
-                let accessToken = data.accessToken;
+            onSuccess: (response) => {
+                console.log("Response Data:", response.data);  
+
+                const accessToken = response.headers['authorization'];
                 console.log("Received access token:", accessToken);
-    
+
                 if (accessToken) {
-                    const { name } = data;  // 서버 응답에서 name 필드만 추출
+                    const { name } = response.data;  
                     console.log("User Data to be saved:", { name });
-                    login({ name });  // name만 저장
-                    localStorage.setItem('authToken', accessToken);
-                    navigate('/'); // 홈 화면으로 이동
+                    login({ name });  
+                    localStorage.setItem('authToken', accessToken); 
+                    navigate('/'); 
                 } else {
                     console.error('Access token not found in the response');
                     alert('로그인 실패: 토큰을 받아올 수 없습니다.');
@@ -50,7 +53,8 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        loginMutation.mutate({ username, password }); // mutation 호출
+        console.log("Attempting to login with:", { username, password });
+        loginMutation.mutate({ username, password }); 
     };
 
     const handleRegister = () => {

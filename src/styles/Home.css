@@ -65,33 +65,33 @@
   
   .recent-searches-dropdown {
     position: absolute;
-    top: 40px; /* 검색창 바로 아래에 위치 */
+    top: 40px; 
     left: 0;
     right: 0;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    max-height: 200px; /* 최대 높이 설정 */
-    overflow-y: auto; /* 스크롤 가능 */
-    z-index: 1000; /* 다른 요소들보다 앞에 위치 */
+    max-height: 200px; 
+    overflow-y: auto; 
+    z-index: 1000; 
 }
 
 .recent-searches-dropdown::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 너비 */
+  width: 8px; 
 }
 
 .recent-searches-dropdown::-webkit-scrollbar-track {
-  background: #f1f1f1; /* 스크롤바 트랙 배경색 */
+  background: #f1f1f1; 
 }
 
 .recent-searches-dropdown::-webkit-scrollbar-thumb {
-  background-color: #c1c6ce; /* 스크롤바 색상 */
-  border-radius: 10px; /* 스크롤바 둥글게 */
+  background-color: #c1c6ce; 
+  border-radius: 10px; 
 }
 
 .recent-searches-dropdown::-webkit-scrollbar-thumb:hover {
-  background-color: #d8d7d7fb; /* 스크롤바에 마우스를 올렸을 때 색상 */
+  background-color: #d8d7d7fb; 
 }
 
 .search-item {
@@ -202,9 +202,9 @@
     margin:0;
     font-size: 14px;
     color: black;
-    line-height:1.5; /* 제목의 줄 높이 조정 */
+    line-height:1.5; 
     max-width: 170px;
-    white-space: normal; /* 줄 바꿈을 허용 */
+    white-space: normal; 
 }
 
   .article-index {
@@ -238,11 +238,11 @@
     }
     
     .last-article {
-      display: flex; /* Flexbox를 사용하여 자식 요소를 나란히 배치 */
-      align-items: flex-start; /* 수직 정렬을 위쪽으로 설정 */
-      margin-bottom: 40px; /* 각 기사 간의 간격 설정 */
+      display: flex; 
+      align-items: flex-start; 
+      margin-bottom: 40px; 
       margin-left: -350px;
-      position: relative; /* ::after 요소의 위치를 상대적으로 설정 */
+      position: relative; 
     }
 
     .top-article-content a {
@@ -277,10 +277,10 @@
       content: ''; 
       position: absolute; 
       left: -125px; 
-      top: -28px; /* 경계선의 위치를 위쪽으로 조정 */
+      top: -28px; 
       height: 0.5px; 
       background-color: lightgray; 
-      width: 166%; /* 경계선의 너비를 100%로 설정 */
+      width: 166%; 
   }
     
     .last-article:nth-child(4)::after {
@@ -320,7 +320,7 @@
 .sidebar1 {
   position: fixed;
   top: 26%;
-  right: 14px; /* 오른쪽에 배치, 왼쪽에 배치하려면 'left: 0;'으로 변경 */
+  right: 14px; 
   display: flex; 
   flex-direction: column;
   align-items: center;
@@ -328,21 +328,21 @@
 }
 
 .sidebar1 img {
-  width: 110px; /* 이미지 크기 조정 */
+  width: 110px; 
   height: 50px;
   cursor: pointer;
   border-radius: 5px;
 }
 
 .sidebar1 img:hover {
-  opacity: 0.8; /* hover 효과 */
+  opacity: 0.8; 
 }
 
 .footer {
-  display: grid; /* Grid 활성화 */
-  grid-template-columns: auto 1fr; /* 두 개의 열을 생성 (이미지, 텍스트) */
-  align-items: center; /* 세로 중앙 정렬 */
-  padding: 10px; /* 여백 조정 (선택 사항) */
+  display: grid; 
+  grid-template-columns: auto 1fr; 
+  align-items: center; 
+  padding: 10px; 
   gap: 100px;
   margin-top:30px;
 }
@@ -368,17 +368,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #121111; /* 테두리 색상 설정 */
-  border-radius: 5px; /* 테두리의 모서리를 둥글게 설정 */
-  background-color: #ffffff; /* 배경색 설정 */
+  border: 1px solid #121111; 
+  border-radius: 5px; 
+  background-color: #ffffff; 
   margin-right: 20px;
   position: relative;
 }
 
 .sidebar-top, .sidebar-bottom {
   width: 100%;
-  height: 20px; /* 상단과 하단의 색상 영역 높이 */
-  background-color: #121111; /* 상단과 하단 색상 설정 */
+  height: 20px; 
+  background-color: #121111; 
 }
 
 .sidebar-content {
@@ -392,23 +392,23 @@
   font-size: 15px;
   margin: 5px 0;
   text-decoration: none;
-  color: #333; /* 텍스트 색상 설정 */
+  color: #333; 
   font-weight: bold;
   transition: color 0.3s ease;
   padding: 5px 0;
 }
 
 .sidebar-link:hover {
-  color: #007bff; /* 링크에 마우스를 올렸을 때 색상 변경 */
+  color: #007bff; 
 }
 
 .sidebar-link:not(:last-child)::after {
-  content: ""; /* 가상 요소의 내용 설정 */
-  position: absolute; /* 절대 위치 설정 */
-  left: 8px; /* 왼쪽 정렬 */
-  right: 0; /* 오른쪽 정렬 */
-  bottom: 90px; /* 아래쪽 정렬 */
-  height: 1px; /* 줄의 두께 */
+  content: ""; 
+  position: absolute; 
+  left: 8px; 
+  right: 0;
+  bottom: 90px; 
+  height: 1px; 
   width: 80%;
-  background-color: #ccc; /* 줄의 색상 */
+  background-color: #ccc; 
 }  

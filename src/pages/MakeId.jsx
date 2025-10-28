@@ -22,11 +22,10 @@ function MakeId() {
     navigate('/');
   };
 
-  // 회원가입 mutation 정의
   const registerMutation = useMutation(
     async (userData) => {
       const response = await axios.post('http://52.203.194.120:8081/api/users/register', userData, {
-        withCredentials: true, // 자격 증명 포함
+        withCredentials: true, 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -36,7 +35,7 @@ function MakeId() {
     {
       onSuccess: () => {
         alert('회원가입이 성공적으로 완료되었습니다. 이제 로그인하세요.');
-        navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
+        navigate('/login'); 
       },
       onError: (error) => {
         if (error.response) {
@@ -53,14 +52,14 @@ function MakeId() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 아이디 유효성 검사
+    // 아이디 검사
     const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
     if (!usernameRegex.test(username)) {
       alert("아이디는 알파벳 대소문자와 숫자로만 구성되며 4~20자이어야 합니다.");
       return;
     }
 
-    // 비밀번호 유효성 검사
+    // 비밀번호 검사
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!])(?!.*\s).{8,16}$/;
     if (!passwordRegex.test(password)) {
       setPasswordValidationError(true);
@@ -69,7 +68,6 @@ function MakeId() {
       setPasswordValidationError(false);
     }
 
-    // 비밀번호와 비밀번호 확인이 일치하는지 확인
     if (password !== confirmPassword) {
       setPasswordError(true);
       return;
@@ -77,7 +75,7 @@ function MakeId() {
       setPasswordError(false);
     }
 
-    // 이메일 형식 검사
+    // 이메일 검사
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setEmailError(true);
@@ -86,7 +84,7 @@ function MakeId() {
       setEmailError(false);
     }
 
-    // 휴대폰 번호 형식 검사
+    // 휴대폰 번호 검사
     const phoneRegex = /^01(?:0|1|[6-9])[0-9]{7,8}$/;
     if (!phoneRegex.test(phoneNumber)) {
       setPhoneError(true);
@@ -105,7 +103,6 @@ function MakeId() {
     };
     console.log(UserRequest);
 
-    // 회원가입 mutation 호출
     registerMutation.mutate(UserRequest);
   };
 

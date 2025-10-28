@@ -9,9 +9,8 @@ import '../styles/Mypage.css';
 function Mypage() {
     const [currentDate] = useState(new Date());
     const [currentPage, setCurrentPage] = useState(1);
-    const articlesPerPage = 3; // 한 페이지당 보여줄 기사 수를 3개로 설정
+    const articlesPerPage = 3; 
 
-    // React Query를 사용하여 스크랩된 기사 가져오기
     const { data: scrapedArticles = [], isLoading, isError, error } = useQuery('scrapedArticles', async () => {
         const token = localStorage.getItem('authToken');
         const response = await axios.get('http://52.203.194.120:8081/api/favorites', {
@@ -19,7 +18,7 @@ function Mypage() {
                 Authorization: `Bearer ${token}`,
             },
             params: {
-                size: 100, // 임의의 큰 값으로 설정하여 모든 기사를 가져옴
+                size: 100, 
             },
         });
         return response.data.map(articleData => ({
@@ -32,12 +31,11 @@ function Mypage() {
         }));
     });
 
-    // 현재 페이지에 따라 표시할 기사 계산
     const indexOfLastArticle = currentPage * articlesPerPage;
     const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
     const currentArticles = scrapedArticles.slice(indexOfFirstArticle, indexOfLastArticle);
 
-    const totalPages = Math.ceil(scrapedArticles.length / articlesPerPage); // 총 페이지 수 계산
+    const totalPages = Math.ceil(scrapedArticles.length / articlesPerPage); 
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -47,7 +45,7 @@ function Mypage() {
     const fullFormattedDate = currentDate.toLocaleDateString('ko-KR', options);
     const dayOfWeek = currentDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0);
     const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
-    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`; // 템플릿 리터럴 사용
+    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`; 
 
     const MaxContentLength = 300;
 
@@ -79,8 +77,8 @@ function Mypage() {
                             return (
                                 <div key={article.id} className="all-article-1-1">
                                     <div className="all-article-content-1-1">
-                                        <Link to={`/article/${article.id}`}> {/* 템플릿 리터럴 사용 */}
-                                            <h3>{article.title}</h3> {/* 제목을 전체 표시 */}
+                                        <Link to={`/article/${article.id}`}> 
+                                            <h3>{article.title}</h3> 
                                             <p>{truncatedContent}</p>
                                         </Link>
                                     </div>

@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // 로컬 스토리지에서 사용자 정보를 불러옴
+        // 로컬 스토리지에서 사용자 정보 불러옴
         const storedUser = localStorage.getItem('authUser');
         if (storedUser) {
             setUser(JSON.parse(storedUser));

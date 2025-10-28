@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import searchfooterimage from '../assets/footerimage.png';
 import searchslogan from '../assets/newsslogan.png';
-import '../styles/SearchResults.css'; // 필요한 스타일 파일을 작성해주세요.
+import '../styles/SearchResults.css'; 
 
 function SearchResults() {
     const location = useLocation();
-    const { results } = location.state || { results: [] }; // 방어 코드 추가
+    const { results } = location.state || { results: [] }; 
 
     const [currentPage, setCurrentPage] = useState(1);
     const articlesPerPage = 3;
 
     useEffect(() => {
-        setCurrentPage(1); // 새로운 검색이 들어오면 첫 페이지로 초기화
+        setCurrentPage(1); 
     }, [results]);
 
     const totalArticles = results.length;

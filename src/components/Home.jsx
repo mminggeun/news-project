@@ -7,27 +7,26 @@ import '../styles/Home.css';
 
 function Home() {
     const navigate = useNavigate();
-    const queryClient = useQueryClient(); // QueryClient 사용하기 위한 hook
-    const specificDate = new Date('2024-08-27');
+    const queryClient = useQueryClient(); 
     const [searchTerm, setSearchTerm] = useState('');
     const [showRecentSearches, setShowRecentSearches] = useState(false);
 
-    // Fetch articles using React Query
+    const today = new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'long' };
+    const formattedDate = today.toLocaleDateString('ko-KR', options);
+
     const { data: articles = [], isLoading: loading } = useQuery('articles', async () => {
         const response = await axios.get('http://52.203.194.120:8081/api/news?page=0&size=15');
+        console.log('Fetched Articles:', response.data);
         return response.data;
     });
 
-    const filteredArticles = articles.filter(article => {
-        const articleDate = new Date(article.publishedAt);
-        return (
-            articleDate.getFullYear() === specificDate.getFullYear() &&
-            articleDate.getMonth() === specificDate.getMonth() &&
-            articleDate.getDate() === specificDate.getDate()
-        );
-    }).slice(0, 15);
+    const sortedArticles = articles.sort((a, b) => b.viewCount - a.viewCount);
 
-    // Fetch recent searches using React Query
+    const topArticle = sortedArticles[0] || {};
+    const otherArticles = sortedArticles.slice(1, 11);
+    const lastArticles = sortedArticles.slice(11);
+
     const { data: recentSearches = [] } = useQuery('recentSearches', async () => {
         const token = localStorage.getItem('authToken');
         const response = await axios.get('http://52.203.194.120:8081/api/search-history/recent', {
@@ -60,23 +59,12 @@ function Home() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            // Update local state after deletion
             const updatedSearches = recentSearches.filter(search => search.query !== query);
             queryClient.setQueryData('recentSearches', updatedSearches);
         } catch (error) {
             console.error('Error deleting search history:', error);
         }
     };
-
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const fullFormattedDate = specificDate.toLocaleDateString('ko-KR', options);
-    const dayOfWeek = specificDate.toLocaleDateString('ko-KR', { weekday: 'long' }).charAt(0);
-    const dateWithoutDot = fullFormattedDate.endsWith('.') ? fullFormattedDate.slice(0, -1) : fullFormattedDate;
-    const finalFormattedDate = `${dateWithoutDot} ${dayOfWeek}`;
-
-    const topArticle = filteredArticles[0] || {};
-    const otherArticles = filteredArticles.slice(1, 11);
-    const lastArticles = filteredArticles.slice(11, 15);
 
     const MAX_CONTENT_LENGTH_TOP = 300;
     const MAX_CONTENT_LENGTH_LAST = 500;
@@ -113,7 +101,7 @@ function Home() {
                 )}
             </div>
             <div className="date-container">
-                <p className="date-text">{finalFormattedDate}</p>
+                <p className="date-text">{formattedDate}</p> 
             </div>
             <div className="articles-container">
                 {topArticle.title && (
