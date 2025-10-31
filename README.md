@@ -6,5 +6,5 @@
 1. **최신 뉴스 제공 서비스**
 2. **뉴스 저장 및 다시 보기 기능**
 
-![](C:\Users\82102\OneDrive\바탕 화면\html\ONEBITE-REACT\newswebsite\images\1 (1).png)
-![](C:\Users\82102\OneDrive\바탕 화면\html\ONEBITE-REACT\newswebsite\images\2 (1).png)
+![](images\1 (1).png)
+![](images\2 (1).png)
