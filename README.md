@@ -1,8 +1,8 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+최신 뉴스를 주기적으로 수집하고 및 요약하는 서비스입니다.
 
-Currently, two official plugins are available:
+위 서비스에서 제공하는 핵심 기능은 2가지입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh.
+1. **최신 뉴스 제공 서비스**
+2. **뉴스 저장 및 다시 보기 기능**
